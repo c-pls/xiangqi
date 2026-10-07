@@ -158,13 +158,14 @@ To prevent race conditions on concurrent move requests in a multi-pod setup, use
 
 ---
 
-## 8. CI: GitHub Actions → Quay.io
+## 8. CI: GitHub Actions → Docker Hub
 
-`.github/workflows/docker-publish.yml` runs on every push to `main`, on `v*.*.*` tags, and manually. It runs the client + server test suites first, then builds the **linux/amd64** image with Buildx and pushes it to Quay.io (`:latest` on main, `:sha-*` always, semver tags on releases).
+`.github/workflows/docker-publish.yaml` runs on every push to `main`, on `v*.*.*` tags, and manually. It runs the client + server test suites first, then builds the **linux/amd64** image with Buildx and pushes it to Docker Hub (`docker.io/cpdss/duckdb-xi`: `:latest` on main, `:sha-*` always, semver tags on releases).
 
 One-time setup:
-1. In `.github/workflows/docker-publish.yml`, set `IMAGE_NAME` to `quay.io/<your-namespace>/antigravity`.
-2. In Quay.io, create the `antigravity` repository (if it doesn't exist) and a robot account with **Write** permission on it.
-3. In GitHub repo Settings → Secrets and variables → Actions, add:
-   - `QUAY_USERNAME` — robot account name (e.g. `myuser+github`)
-   - `QUAY_PASSWORD` — robot account token
+1. In Docker Hub: Account Settings → Security → Personal access tokens → Generate new token (Read & Write scope). Use the token, not your password.
+2. In GitHub repo Settings → Secrets and variables → Actions, add:
+   - `DOCKERHUB_USERNAME` — Docker Hub username (e.g. `cpdss`)
+   - `DOCKERHUB_PASSWORD` — the access token from step 1
+
+The `cpdss/duckdb-xi` repository is created automatically on the first push.
