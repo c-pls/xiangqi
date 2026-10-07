@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sandalwood">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Xiangqi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Sans+TC:wght@500;700;900&family=Noto+Sans+SC:wght@500;700;900&family=Noto+Serif+TC:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Three.js for Epic 3D Animations (Local, 100% Offline) -->
+    
+    <script>
+    // Safe non-intrusive logging; filter benign browser notifications
+    window.onerror = function(message, source, lineno, colno, error) {
+        if (typeof message === 'string' && (
+            message.includes('ResizeObserver') ||
+            message.includes('Script error') ||
+            message.includes('favicon')
+        )) {
+            return true;
+        }
+        console.error('[Xiangqi Error]', message, source, lineno, error);
+        return true;
+    };
+    window.addEventListener('unhandledrejection', function(event) {
+        if (event.reason && (event.reason.name === 'NotAllowedError' || String(event.reason).includes('play()'))) {
+            event.preventDefault();
+            return;
+        }
+        console.warn('[Xiangqi Promise Warning]', event.reason);
+    });
+    </script>
+</head>
+<body>
+<div id="vfxShowcaseMenu" style="position: fixed; top: 12px; right: 12px; z-index: 10002; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(245, 158, 11, 0.4); padding: 12px; border-radius: 10px; color: white; font-family: monospace; font-size: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-weight:bold; color:#f59e0b;">⚡ 3D VFX Showcase</span>
+        <button onclick="document.getElementById('vfxShowcaseMenu').style.display='none'" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:14px; padding:0 4px;" title="Close">✕</button>
+    </div>
+    <button onclick="window.vfxEngine.playCapture('A', {r:9, c:3}, {r:8, c:4})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🗡️ Advisor Katana</button><br>
+    <button onclick="window.vfxEngine.playCapture('C', {r:2, c:1}, {r:7, c:1})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">💥 Cannon Fireball</button><br>
+    <button onclick="window.vfxEngine.playCapture('H', {r:9, c:1}, {r:7, c:2})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🐎 Horse L-Hop & Stomp</button><br>
+    <button onclick="window.vfxEngine.playCapture('R', {r:9, c:0}, {r:0, c:0})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🏎️ Chariot (Vertical Slash)</button><br>
+    <button onclick="window.vfxEngine.playCapture('R', {r:9, c:0}, {r:9, c:4})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🏎️ Chariot (Horizontal Slash)</button><br>
+    <div style="margin-top:6px; color:#f59e0b; font-weight:bold;">🏁 Checkmate Finales</div>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('R', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #ef4444; background:#7f1d1d; color:#fca5a5; cursor:pointer; font-weight:bold;">🏎️ Chariot Mate (Red)</button>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('R', 'checkmate', 'black')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #38bdf8; background:#0c4a6e; color:#7dd3fc; cursor:pointer; font-weight:bold;">🏎️ Chariot Mate (Black)</button><br>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('C', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">💥 Cannon Mate</button>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('H', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🐎 Horse Mate</button><br>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('E', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🐘 Elephant Mate</button>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('A', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🗡️ Advisor Mate</button><br>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('P', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">♟️ Soldier Mate</button>
+    <button onclick="window.FxDebug && window.FxDebug.trigger('K', 'checkmate', 'red')" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">♔ General Mate</button><br>
+    <button onclick="window.vfxEngine.playCapture('E', {r:9, c:2}, {r:7, c:0})" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #555; background:#222; color:#fff; cursor:pointer;">🐘 Elephant Stomp</button><br>
+    <button onclick="if(window.app) window.app.triggerSoldierRiverCross({r:4, c:4}, 'red');" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #ef4444; background:#7f1d1d; color:#fca5a5; cursor:pointer; font-weight:bold;">🌊 紅兵过河 (Red)</button>
+    <button onclick="if(window.app) window.app.triggerSoldierRiverCross({r:5, c:4}, 'black');" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #38bdf8; background:#0c4a6e; color:#38bdf8; cursor:pointer; font-weight:bold;">🌊 藍卒过河 (Blue)</button><br>
+    <button onclick="if(window.app) window.app.triggerCheckBanner('R'); else if(window.soundFx) soundFx.playCheck('R');" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #ffd700; background:#7f1d1d; color:#ffd700; cursor:pointer; font-weight:bold;">⚔️ 將軍！ (Check Alert)</button><br>
+    <button onclick="if(window.fx3dEngine) window.fx3dEngine.playCheckmateIronBolt3D({r:0, c:4})" style="margin:2px; padding:3px 6px; background:#dc2626; color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">🔒 3D Iron Bolt</button><br>
+    <button onclick="if(window.app) window.app.toggleFlip();" style="margin:2px; padding:3px 6px; border-radius:4px; border:1px solid #10b981; background:#064e3b; color:#a7f3d0; cursor:pointer; font-weight:bold;">🔃 Flip Board (Black Lower)</button>
+</div>
+
+    <!-- Top Application Bar -->
+    <header class="app-header">
+        <div class="brand-wrap" style="cursor: pointer;" onclick="const m=document.getElementById('vfxShowcaseMenu'); if(m) m.style.display = (m.style.display==='none'||!m.style.display)?'block':'none';" title="Click to toggle VFX Showcase">
+            <div class="brand-icon">帥</div>
+            <div>
+                <h1 class="brand-title">Xiangqi</h1>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <!-- Theme Selection (Admin Only, Default: Hidden) -->
+            <select id="themeSelect" class="btn" title="Choose color theme" style="display: none;">
+                <option value="sandalwood" selected>🪵 Classic Wood (Default)</option>
+                <option value="obsidian">🎨 Obsidian Slate (Cyber)</option>
+                <option value="jade">🍃 Celadon Jade (Minimal)</option>
+            </select>
+
+            <!-- Fullscreen Button -->
+            <button id="btnFullscreen" class="btn btn-fullscreen" title="Toggle Fullscreen">
+                <span>⛶</span> Fullscreen
+            </button>
+
+            <!-- Flip Board Perspective Button -->
+            <button id="btnFlipBoard" class="btn" title="Flip Board Perspective / 翻轉視角 (Black / Red Lower)">
+                <span>🔃</span> Flip / 翻盤
+            </button>
+
+            <!-- Multiplayer Lobby Button -->
+            <button id="btnLobby" class="btn btn-primary" onclick="if(window.multiplayer) window.multiplayer.showScreen('lobby');" title="Open Multiplayer Lobby">
+                <span>🌐</span> Lobby / 聯機
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Game Arena -->
+    <main class="game-container">
+
+        <!-- Left HUD: Red Player & Action Controls -->
+        <aside class="hud-panel">
+            <div class="player-card active" id="cardRed">
+                <div class="player-header">
+                    <div class="player-info">
+                        <div class="player-avatar red">帥</div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="player-name">Red Player (First)</div>
+                                <span id="mpStatusDotRed" class="mp-status-dot online" title="Online"></span>
+                            </div>
+                            <span class="player-turn-tag">Thinking...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="player-clock" id="clockRed">∞</div>
+                <div class="graveyard-panel" id="trayRed" title="Red Graveyard"></div>
+            </div>
+
+            <!-- Offline Action Buttons -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="btn btn-primary" id="btnNewGame">
+                    <span>🔄</span> New Game
+                </button>
+                <button class="btn" id="btnUndo">
+                    <span>↩️</span> Undo Move
+                </button>
+            </div>
+
+            <!-- Online Multiplayer Action Controls -->
+            <div id="mpSidebarControls" style="display: none; flex-direction: column; gap: 8px;">
+                <button class="btn btn-warning" id="mpBtnOfferDraw">
+                    <span>🤝</span> Offer Draw / 求和
+                </button>
+                <button class="btn btn-danger" id="mpBtnResign">
+                    <span>🏳️</span> Resign / 認輸
+                </button>
+                <button class="btn" id="mpBtnLeave">
+                    <span>🚪</span> Leave Room / 退出
+                </button>
+            </div>
+
+            <!-- Settings Toggles -->
+            <!-- Admin gate: the VFX config block below is visible to the admin
+                 account only (account "admin" + password, unlocked per tab
+                 session by js/admin-gate.js). -->
+            <div id="fxAdminLogin" class="toggle-item" style="margin-top: 6px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
+                <span>Admin / 管理員</span>
+                <span style="display: flex; gap: 6px; align-items: center;">
+                    <input type="text" id="fxAdminAccount" class="mp-select" placeholder="Account / 帳號" autocomplete="username" style="max-width: 84px;">
+                    <input type="password" id="fxAdminPw" class="mp-select" placeholder="Password / 密碼" autocomplete="current-password" style="max-width: 84px;">
+                    <button id="fxAdminUnlock" class="btn" style="padding: 6px 10px;">Login / 登入</button>
+                </span>
+            </div>
+            <div id="fxConfigBlock" style="display: none; flex-direction: column; gap: 12px; margin-top: 6px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);">
+                <div class="toggle-item">
+                    <span>FX Intensity / 特效強度</span>
+                    <select id="fxIntensity" class="mp-select" style="max-width: 132px;">
+                        <option value="full" selected>Full / 全開</option>
+                        <option value="low">Low / 簡化</option>
+                        <option value="off">Off / 關閉</option>
+                    </select>
+                </div>
+                <div class="toggle-item">
+                    <span>FX Theme / 特效主題</span>
+                    <select id="fxTheme" class="mp-select" style="max-width: 132px;">
+                        <option value="ink" selected>Ink / 水墨</option>
+                        <option value="neon">Neon / 霓虹</option>
+                    </select>
+                </div>
+                <div class="toggle-item">
+                    <span></span>
+                    <button id="fxSkipBtn" class="btn" style="padding: 6px 12px;">⏭ Skip animation / 跳過動畫</button>
+                </div>
+                <div class="toggle-item">
+                    <span>Mute All / 靜音</span>
+                    <label class="switch">
+                        <input type="checkbox" id="muteToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-item">
+                    <span>Master / 主音量</span>
+                    <input type="range" id="volMaster" min="0" max="100" value="42" style="width: 132px;">
+                </div>
+                <div class="toggle-item">
+                    <span>SFX / 音效</span>
+                    <input type="range" id="volSfx" min="0" max="100" value="100" style="width: 132px;">
+                </div>
+                <div class="toggle-item">
+                    <span>Music / 音樂</span>
+                    <input type="range" id="volMusic" min="0" max="100" value="100" style="width: 132px;">
+                </div>
+                <div class="toggle-item">
+                    <span></span>
+                    <button id="fxAdminLock" class="btn" style="padding: 6px 12px;">🔒 Lock / 鎖定</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center: Interactive Chess Board (Fixed Orientation, Prominent & Centered) -->
+        <section class="board-wrapper">
+            <!-- Grand Imperial Check Alert Banner (100% Chinese, Full Width, Epic Calligraphy) -->
+            <div class="check-banner" id="checkBanner">
+                <div class="check-banner-inner">
+                    <span class="check-crest">❖</span>
+                    <span class="check-char">將</span>
+                    <span class="check-char">軍</span>
+                    <span class="check-char exclamation">！</span>
+                    <span class="check-crest">❖</span>
+                </div>
+            </div>
+
+            <!-- Grand Imperial Checkmate Banner & Stamp (100% Chinese, Wide & Cinematic) -->
+            <div class="checkmate-stamp" id="checkmateStamp">
+                <div class="stamp-seal-box">
+                    <div class="stamp-seal-badge">決勝時刻</div>
+                    <div class="stamp-seal-text" style="font-family: 'Ma Shan Zheng', cursive;">絕殺<br><span style="font-size: 2rem">CHECKMATE</span></div>
+                    <div class="stamp-desc-zh" id="stampDescZh">紅方大捷 · 一子定乾坤</div>
+                    <div class="stamp-sub-zh" id="stampSubZh">將軍絕殺 · 全軍告捷 · 棋局終</div>
+                </div>
+            </div>
+
+            <!-- Multiplayer Turn & Role Banner -->
+            <div class="mp-turn-banner" id="mpTurnBanner" style="display: none;">
+                <div class="mp-turn-badge badge-opponent-turn" id="mpTurnBadge">⏳ Opponent Turn</div>
+                <div class="mp-turn-details" id="mpTurnDetails">Waiting for match to begin...</div>
+            </div>
+
+            <div class="board-outer" id="boardOuter">
+                <!-- SVG Board Grid Lines -->
+                <svg id="boardSvg" class="board-svg" viewBox="0 0 400 450"></svg>
+
+                <!-- Realistic Particle & Explosion Physics Canvas -->
+                <canvas id="fxCanvas" class="fx-canvas"></canvas>
+
+                <!-- Real-time 3D WebGL Threat & Cannon Canvas -->
+                <canvas id="fxCanvas3D" class="fx-canvas-3d"></canvas>
+
+                <!-- Dramatic Spotlight Vignette for Checkmate Climax -->
+                <div id="cinematicVignette" class="cinematic-vignette"></div>
+
+                <!-- Check red pulse vignette -->
+                <div id="checkVignette" class="check-vignette"></div>
+
+                <!-- Interactive Pieces, Markers & Animations Layer -->
+                <div id="boardLayer" class="board-layer"></div>
+            </div>
+        </section>
+
+        <!-- Right HUD: Black Player & Move History -->
+        <aside class="hud-panel">
+            <div class="player-card" id="cardBlack">
+                <div class="player-header">
+                    <div class="player-info">
+                        <div class="player-avatar black">將</div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="player-name">Black Player (Second)</div>
+                                <span id="mpStatusDotBlack" class="mp-status-dot online" title="Online"></span>
+                            </div>
+                            <span class="player-turn-tag">Thinking...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="player-clock" id="clockBlack">∞</div>
+                <div class="graveyard-panel" id="trayBlack" title="Black Graveyard"></div>
+            </div>
+
+            <!-- Move History Notation Log -->
+            <div class="history-section">
+                <div class="history-header">
+                    <span title="Round / Turn Number">Rd</span>
+                    <span>Red Move</span>
+                    <span>Black Move</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- Dynamic move rows -->
+                </div>
+            </div>
+
+            <!-- In-Game Multiplayer Chat -->
+            <div id="mpChatContainer" class="mp-chat-container">
+                <div class="mp-chat-header">
+                    <span>💬 Room Chat / 局內對話</span>
+                </div>
+                <div id="mpChatMessages" class="mp-chat-messages"></div>
+                <div class="mp-chat-input-row">
+                    <input id="mpChatInput" class="mp-chat-input" maxlength="140" placeholder="Type message..." autocomplete="off" />
+                    <button id="mpBtnChatSend" class="btn btn-primary mp-chat-send">Send</button>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Game Over Modal -->
+    <div class="modal-overlay" id="gameOverModal">
+        <div class="modal-card">
+            <div class="modal-icon">🏆</div>
+            <h2 class="modal-title" id="modalTitle">紅方大捷</h2>
+            <p class="modal-body" id="modalDesc">絕殺無解！一子定乾坤，全軍告捷！</p>
+            <button class="btn btn-primary" id="modalBtnRestart" style="width: 100%; padding: 12px; font-size: 1.05rem;">再戰一局 / Rematch</button>
+            <button class="btn" id="modalBtnReplay" style="width: 100%; padding: 12px; font-size: 1.05rem; margin-top: 8px;">Replay last move in slow-mo</button>
+        </div>
+    </div>
+
+    <!-- Reconnecting Banner -->
+    <div id="mpReconnectOverlay" class="mp-reconnect-overlay">
+        ⚠️ Connection lost. Reconnecting to match... / 連線中斷，正在重新連接...
+    </div>
+
+    <!-- 1. Username Selection Screen -->
+    <div class="modal-overlay" id="screenUsername">
+        <div class="modal-card">
+            <div class="modal-icon">帥</div>
+            <h2 class="modal-title">Enter Commander Name / 進入戰局</h2>
+            <p class="modal-body">Choose your commander name for online multiplayer (2-20 characters).</p>
+            <div style="margin-bottom: 16px;">
+                <input id="mpUsernameInput" class="mp-input" maxlength="20" placeholder="Your name (e.g. GuanYu)" autocomplete="off" />
+                <div id="mpPasswordGroup" style="display: none; margin-top: 10px; text-align: left;">
+                    <label style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 4px;">Password (Admin only) / 管理員密碼:</label>
+                    <input id="mpPasswordInput" type="password" class="mp-input" placeholder="Enter password for admin" autocomplete="off" />
+                </div>
+                <div id="mpUsernameError" style="color: #f87171; font-size: 0.85rem; margin-top: 6px; text-align: left;"></div>
+            </div>
+            <button class="btn btn-primary" id="btnJoinArena" style="width: 100%; padding: 12px; font-size: 1.05rem;">Enter Arena / 進入大廳</button>
+        </div>
+    </div>
+
+    <!-- 2. Main Lobby Screen -->
+    <div class="modal-overlay" id="screenLobby">
+        <div class="modal-card mp-lobby-card">
+            <div class="mp-lobby-header">
+                <div>
+                    <h2 style="font-size: 1.4rem; color: #fff; margin: 0;">🏯 Chinese Chess Lobby / 楚河漢界大廳</h2>
+                    <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 2px;">Real-time 2-Player Server-Authoritative Arena</div>
+                </div>
+                <div class="mp-user-badge">
+                    <span>⚔️ <span id="mpUserProfileName">Player</span></span>
+                    <button id="mpBtnSwitchUser" class="btn" style="padding: 4px 8px; font-size: 0.75rem;" title="Change Username">Switch</button>
+                </div>
+            </div>
+
+            <!-- Lobby Action Bar -->
+            <div class="mp-lobby-toolbar">
+                <button class="btn btn-primary" id="mpBtnOpenCreate">
+                    <span>➕</span> Create Room / 創建房間
+                </button>
+                <div class="mp-join-code-wrap">
+                    <input id="mpJoinCodeInput" class="mp-input" placeholder="6-Char Room Code" maxlength="8" style="text-transform: uppercase;" />
+                    <button class="btn" id="mpBtnJoinCode">Join</button>
+                </div>
+                <button class="btn" id="mpBtnRefreshLobby" title="Refresh room list">🔄</button>
+            </div>
+
+            <!-- Live Room List -->
+            <div style="font-size: 0.9rem; font-weight: 700; color: #cbd5e1; margin-bottom: 8px;">Active Rooms / 進行中與等待中的棋局:</div>
+            <div id="mpRoomList" class="mp-room-list">
+                <!-- Dynamic room cards -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Create Room Modal -->
+    <div class="modal-overlay" id="modalCreateRoom">
+        <div class="modal-card">
+            <h2 class="modal-title">Create Match / 創建房間</h2>
+            <div style="display: flex; flex-direction: column; gap: 14px; margin: 18px 0; text-align: left;">
+                <div>
+                    <label style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 4px;">Room Name (Optional) / 房間名稱:</label>
+                    <input id="mpRoomNameInput" class="mp-input" placeholder="e.g. Grand Master Duel" maxlength="30" />
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 4px;">Preferred Side / 執棋偏好:</label>
+                    <select id="mpSideSelect" class="mp-select">
+                        <option value="random">🎲 Random / 隨機 (Fair Draw)</option>
+                        <option value="red">帥 Red (Moves First) / 紅方 (先手)</option>
+                        <option value="black">將 Black (Moves Second) / 黑方 (後手)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.85rem; color: #94a3b8; display: block; margin-bottom: 4px;">Time Control / 用時規則:</label>
+                    <select id="mpTimeSelect" class="mp-select">
+                        <option value="unlimited">⏳ Casual (Unlimited) / 休閒無限制</option>
+                        <option value="3min">⚡ 3 Min Blitz / 3分鐘快棋</option>
+                        <option value="5min" selected>⏱️ 5 Min Rapid / 5分鐘快速</option>
+                        <option value="10min">🏆 10 Min Classical / 10分鐘標準</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" id="mpBtnSubmitCreate" style="flex: 1; padding: 12px;">Create / 確定創建</button>
+                <button class="btn" id="mpBtnCloseCreate" style="padding: 12px 18px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Waiting Room Overlay (Host Waiting for 2nd Player) -->
+    <div class="modal-overlay" id="screenWaiting">
+        <div class="modal-card">
+            <div class="mp-pulse-spinner"></div>
+            <h2 class="modal-title">Waiting for Opponent...</h2>
+            <p class="modal-body">Share this 6-character room code or link with your opponent:</p>
+            <div class="mp-waiting-code-display" id="mpWaitingCode">ABC123</div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-primary" id="mpBtnCopyLink" style="padding: 12px; font-size: 1.05rem;">
+                    <span>📋</span> Copy Invitation Link / 複製邀請連結
+                </button>
+                <button class="btn" id="mpBtnLeaveWaiting" style="padding: 10px;">
+                    <span>✕</span> Cancel & Leave Room / 取消並離開
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Draw Offer Prompt -->
+    <div class="modal-overlay" id="modalDrawOffer">
+        <div class="modal-card">
+            <div class="modal-icon">🤝</div>
+            <h2 class="modal-title">Draw Offer / 和棋請求</h2>
+            <p class="modal-body" id="mpDrawOfferDesc">Your opponent has proposed a draw. Do you accept?</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" id="mpBtnAcceptDraw" style="flex: 1; padding: 12px;">Accept Draw / 同意和棋</button>
+                <button class="btn btn-danger" id="mpBtnDeclineDraw" style="flex: 1; padding: 12px;">Decline / 拒絕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Graphics Engine & Modular Scripts (100% Offline, Zero External CDNs) -->
+
+    <script src="js/pieces.js"></script>
+    <script src="js/rules.js"></script>
+    
+    <script src="js/three.min.js"></script>
+    <script src="js/gsap.min.js"></script>
+    <script src="js/howler.min.js"></script>
+    <script src="js/event-bus.js"></script>
+    <script src="js/effect-themes.js"></script>
+
+    <script src="js/fx3d.js"></script>
+    <script src="js/particle-pool.js"></script>
+    <script src="js/vfx.js"></script>
+    <script src="js/effects-config.js"></script>
+    <script src="js/audio-manager.js"></script>
+    <script src="js/music.js"></script>
+    <script src="js/announcer.js"></script>
+    <script src="js/check-vfx.js"></script>
+    <script src="js/checkmate-vfx.js"></script>
+    <script src="js/slowmo.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/effects-bridge.js"></script>
+    <script src="js/river-fx.js"></script>
+    <script src="js/multiplayer.js"></script>
+    <script src="js/debug-panel.js"></script>
+    <script src="js/admin-gate.js"></script>
+</body>
+</html>

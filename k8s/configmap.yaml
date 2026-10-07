@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xiangqi-config
+  labels:
+    app.kubernetes.io/name: xiangqi
+    app.kubernetes.io/part-of: xiangqi-game
+data:
+  PORT: "8080"
+  ALLOWED_ORIGINS: "*"
+  RECONNECT_GRACE_SECONDS: "60"
+  TURN_TIMER_SECONDS: "0"
+  LOG_LEVEL: "info"

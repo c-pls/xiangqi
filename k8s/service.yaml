@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: xiangqi-service
+  labels:
+    app.kubernetes.io/name: xiangqi
+    app.kubernetes.io/part-of: xiangqi-game
+spec:
+  type: ClusterIP
+  selector:
+    app: xiangqi
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP

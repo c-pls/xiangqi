@@ -1,0 +1,12 @@
+# Keep the build context lean; only runtime files are COPY'd anyway.
+node_modules
+npm-debug.log
+.git
+.gitignore
+tests
+server/tests
+server/node_modules
+k8s
+*.md
+.DS_Store
+uploads

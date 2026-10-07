@@ -1,0 +1,3864 @@
+/* ==========================================================================
+   Xiangqi Modern UI Stylesheet
+   ========================================================================== */
+
+:root {
+    --bg-page: #0b0f17;
+    --bg-panel: rgba(18, 24, 38, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+
+    /* Board & Grid */
+    --board-bg: #141b2a;
+    --board-border: #2a354c;
+    --board-grid: #3a4b69;
+    --board-river-text: rgba(148, 163, 184, 0.45);
+    --board-river-line: rgba(56, 189, 248, 0.2);
+
+    /* Pieces - Red */
+    --piece-red-light: #ff6b6b;
+    --piece-red-main: #dc2626;
+    --piece-red-dark: #7f1d1d;
+    --piece-red-glow: rgba(239, 68, 68, 0.4);
+    --piece-red-char: #ffffff;
+    --piece-red-ring: #fca5a5;
+
+    /* Pieces - Black / Dark */
+    --piece-black-light: #475569;
+    --piece-black-main: #1e293b;
+    --piece-black-dark: #090d16;
+    --piece-black-glow: rgba(100, 116, 139, 0.35);
+    --piece-black-char: #f1f5f9;
+    --piece-black-ring: #cbd5e1;
+
+    /* Accents & Highlights */
+    --accent-teal: #14b8a6;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --selection-glow: #38bdf8;
+    --move-hint-bg: rgba(56, 189, 248, 0.45);
+    --capture-hint-bg: rgba(239, 68, 68, 0.55);
+
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: 'Noto Serif SC', 'Noto Serif TC', 'STKaiti', 'Kaiti SC', 'KaiTi', 'Songti SC', 'Songti TC', 'Hiragino Sans GB', serif;
+}
+
+/* Warm Neo-Chinese Sandalwood Theme (Golden Parchment Board & Lacquered Gold Tokens) */
+[data-theme="sandalwood"] {
+    --bg-page: #140d07;
+    --bg-panel: rgba(30, 20, 13, 0.92);
+    --panel-border: rgba(217, 119, 6, 0.28);
+    --board-bg: #deb67d;
+    --board-border: #4d2307;
+    --board-grid: #54280d;
+    --board-river-text: rgba(84, 40, 13, 0.72);
+    --board-river-line: rgba(84, 40, 13, 0.35);
+    --board-index-color: #5c2c10;
+
+    /* Pieces - Luxury Lacquered Discs with Radiant Gold Characters like Reference Image */
+    /* Red: Deep Crimson Lacquer Disc + Brilliant Warm Gold Calligraphy */
+    --piece-red-light: #bf2626;
+    --piece-red-main: #991b1b;
+    --piece-red-dark: #580c0c;
+    --piece-red-glow: rgba(185, 28, 28, 0.5);
+    --piece-red-char: #ffd782;
+    --piece-red-ring: #e5b869;
+
+    /* Black: Deep Ebony Lacquer Disc + Brilliant Warm Gold Calligraphy */
+    --piece-black-light: #374151;
+    --piece-black-main: #1f2937;
+    --piece-black-dark: #0a0d14;
+    --piece-black-glow: rgba(15, 23, 42, 0.6);
+    --piece-black-char: #e6c27e;
+    --piece-black-ring: #d4a85b;
+}
+
+/* Minimalist Jade Theme */
+[data-theme="jade"] {
+    --bg-page: #0f1c1a;
+    --bg-panel: rgba(19, 36, 33, 0.9);
+    --panel-border: rgba(20, 184, 166, 0.25);
+    --board-bg: #152925;
+    --board-border: #264a43;
+    --board-grid: #396f65;
+    --board-river-text: rgba(45, 212, 191, 0.4);
+    --board-river-line: rgba(45, 212, 191, 0.3);
+
+    --piece-red-light: #fb7185;
+    --piece-red-main: #e11d48;
+    --piece-red-dark: #4c0519;
+    --piece-red-ring: #fecdd3;
+
+    --piece-black-light: #2dd4bf;
+    --piece-black-main: #115e59;
+    --piece-black-dark: #042f2e;
+    --piece-black-ring: #99f6e4;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    background-image: 
+        radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(239, 68, 68, 0.08) 0px, transparent 50%);
+}
+
+/* App Header */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--panel-border);
+    backdrop-filter: blur(12px);
+    z-index: 20;
+}
+
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--piece-red-main), #b91c1c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 20px;
+    color: #fff;
+    box-shadow: 0 4px 12px var(--piece-red-glow);
+}
+
+.brand-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #f8fafc;
+}
+
+.brand-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Main Layout Grid */
+.game-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 10px 20px;
+    max-width: 1680px;
+    margin: 0 auto;
+    width: 100%;
+    min-height: calc(100vh - 64px);
+}
+
+/* Sidebar HUD Panels - Sleek & compact so board is the heroic centerpiece */
+.hud-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: var(--panel-shadow);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 235px;
+    max-height: 88vh;
+    flex-shrink: 0;
+}
+
+/* Player Card */
+.player-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.player-card.active {
+    border-color: var(--selection-glow);
+    background: rgba(56, 189, 248, 0.06);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.18);
+}
+
+.player-card.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--selection-glow);
+}
+
+.player-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.player-avatar.red {
+    background: linear-gradient(135deg, var(--piece-red-light), var(--piece-red-dark));
+    color: #fff;
+    box-shadow: 0 2px 8px var(--piece-red-glow);
+}
+
+.player-avatar.black {
+    background: linear-gradient(135deg, var(--piece-black-light), var(--piece-black-dark));
+    color: #f1f5f9;
+    box-shadow: 0 2px 8px var(--piece-black-glow);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.player-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #f8fafc;
+}
+
+.player-turn-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    display: none;
+}
+
+.player-card.active .player-turn-tag {
+    display: inline-block;
+    background: var(--selection-glow);
+    color: #0b0f17;
+}
+
+.player-clock {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    letter-spacing: 0.05em;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 6px 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.player-card.active .player-clock {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+}
+
+/* Captured Pieces Tray */
+.captured-tray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 28px;
+    padding: 4px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.captured-mini {
+    width: 22px;
+    height: 22px;
+    opacity: 0.85;
+}
+
+/* Graveyard entrance (Phase 2): newly captured pieces fade in with a slight
+   rise over ~300ms. The `captured-entering` class is applied only to pieces
+   added since the previous render (see renderCapturedTrays in js/app.js). */
+@keyframes captured-piece-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 0.85; transform: translateY(0); }
+}
+
+.captured-mini.captured-entering {
+    animation: captured-piece-enter 0.3s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .captured-mini.captured-entering {
+        animation: none;
+    }
+}
+
+/* Board Center Wrapper */
+.board-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================================
+   ⚔️ GRAND IMPERIAL CHECK BANNER (將軍！ 100% CHINESE, FULL-WIDTH)
+   ======================================================== */
+.check-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0) scale(0);
+    width: min(92vw, 440px);
+    max-width: 440px;
+    background: linear-gradient(135deg, rgba(185, 28, 28, 0.98) 0%, rgba(135, 20, 20, 0.98) 50%, rgba(60, 10, 10, 0.98) 100%);
+    border-radius: 12px;
+    border: 3px solid #ffd700;
+    outline: 2px dashed rgba(254, 240, 138, 0.8);
+    outline-offset: -6px;
+    box-shadow: 0 0 35px rgba(220, 38, 38, 0.85), 0 16px 36px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 68;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.check-banner.show {
+    opacity: 1;
+    animation: checkBannerFastSlam 0.82s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes checkBannerFastSlam {
+    0% {
+        transform: translate3d(-50%, -50%, 0) scale(2.4);
+        opacity: 0;
+    }
+    14% {
+        transform: translate3d(-50%, -50%, 0) scale(0.95);
+        opacity: 1;
+    }
+    24% {
+        transform: translate3d(-50%, -50%, 0) scale(1.03);
+    }
+    34% {
+        transform: translate3d(-50%, -50%, 0) scale(1.0);
+        opacity: 1;
+    }
+    75% {
+        transform: translate3d(-50%, -50%, 0) scale(1.0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(-50%, -50%, 0) scale(1.1);
+        opacity: 0;
+    }
+}
+
+.check-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 2px 8px;
+}
+
+.check-banner .check-char {
+    font-family: 'Ma Shan Zheng', cursive, 'Kaiti SC', 'STKaiti', serif;
+    font-size: 4.2rem;
+    font-weight: 900;
+    line-height: 1;
+    background: linear-gradient(180deg, #fffbeb 0%, #fef08a 25%, #ffd700 70%, #b45309 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(255, 215, 0, 0.75));
+    transform: translateZ(0);
+}
+
+.check-banner .check-char.exclamation {
+    font-size: 3.6rem;
+    color: #ffd700;
+    -webkit-text-fill-color: #ffd700;
+}
+
+.check-banner .check-crest {
+    font-size: 1.8rem;
+    color: #ffd700;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.85));
+    opacity: 0.85;
+}
+
+/* Board Outer Alarm Vignette during Check (GPU-accelerated, zero composite thrash) */
+.board-outer.check-alarm-vignette {
+    box-shadow: 0 0 45px rgba(220, 38, 38, 0.85), inset 0 0 50px rgba(220, 38, 38, 0.55) !important;
+    transition: box-shadow 0.15s ease !important;
+}
+
+/* Grand Imperial Checkmate Banner & Stamp (100% Chinese, Wide & Cinematic) */
+.checkmate-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0) rotate(-4deg);
+    pointer-events: none;
+    z-index: 70;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    width: min(92vw, 680px);
+}
+
+.checkmate-stamp.show {
+    opacity: 1;
+    animation: stampSlamWide 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+}
+
+.stamp-seal-box {
+    background: radial-gradient(ellipse at 50% 40%, #b91c1c 0%, #7f1d1d 60%, #450a0a 100%);
+    border: 5px solid #fef08a;
+    outline: 2px dashed #f59e0b;
+    outline-offset: -10px;
+    border-radius: 20px;
+    padding: 24px 48px 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(220, 38, 38, 0.9), inset 0 0 35px rgba(254, 240, 138, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.stamp-seal-badge {
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fef08a;
+    letter-spacing: 0.4em;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 3px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(254, 240, 138, 0.5);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.stamp-seal-text {
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'BiauKai', 'PingFang SC', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: #fef08a;
+    text-shadow: 0 0 30px rgba(254, 240, 138, 0.95), 0 6px 14px rgba(0, 0, 0, 0.85);
+    line-height: 1.1;
+    margin: 2px 0 6px;
+}
+
+.stamp-desc-zh {
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'PingFang SC', serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 4px;
+    letter-spacing: 0.22em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.stamp-sub-zh {
+    font-family: 'Kaiti SC', 'STKaiti', 'PingFang SC', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: #fde68a;
+    margin-top: 6px;
+    opacity: 0.95;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes stampSlamWide {
+    0% { transform: translate(-50%, -50%) scale(2.6) rotate(-14deg); opacity: 0; }
+    65% { transform: translate(-50%, -50%) scale(0.94) rotate(-3deg); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(-4deg); opacity: 1; }
+}
+
+/* The Chess Board Container */
+.board-outer {
+    position: relative;
+    background: var(--board-bg);
+    border: 4px solid var(--board-border);
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    padding: 30px 22px;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+
+/* Sandalwood / Natural Wood Board Grain & Border */
+[data-theme="sandalwood"] .board-outer {
+    background: 
+        radial-gradient(ellipse at 50% 50%, rgba(255, 245, 225, 0.28) 0%, rgba(85, 38, 12, 0.18) 100%),
+        repeating-linear-gradient(90deg, #deb67d 0px, #e8c48e 2px, #deb67d 5px, #d4a568 10px, #deb67d 16px),
+        #deb67d;
+    border: 10px solid #573016;
+    border-radius: 14px;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.75), 
+        inset 0 0 0 2px #361b0a,
+        inset 0 0 0 4px #c29560,
+        inset 0 0 20px rgba(69, 26, 3, 0.25);
+}
+
+[data-theme="sandalwood"] .grid-line {
+    stroke: #54280d;
+    stroke-width: 1.8;
+}
+
+[data-theme="sandalwood"] .border-line {
+    stroke: #54280d;
+    stroke-width: 3.2;
+}
+
+[data-theme="sandalwood"] .river-text {
+    fill: #54280d;
+    opacity: 0.76;
+}
+
+[data-theme="sandalwood"] .star-mark {
+    stroke: #54280d;
+    stroke-width: 1.5;
+}
+
+/* Piece symbols inherit luxury embossed gold styling */
+[data-theme="sandalwood"] .piece-symbol {
+    color: inherit;
+}
+
+/* Board SVG Canvas (Lines, River, Palaces, Numbers) - Prominent, Large & Centered */
+.board-svg {
+    display: block;
+    width: min(88vh, 88vw);
+    height: min(99vh, 99vw);
+    max-width: 780px;
+    max-height: 878px;
+    overflow: visible;
+}
+
+.grid-line {
+    stroke: var(--board-grid);
+    stroke-width: 1.8;
+    shape-rendering: geometricPrecision;
+}
+
+.border-line {
+    stroke: var(--board-border);
+    stroke-width: 3.2;
+    shape-rendering: geometricPrecision;
+}
+
+.river-text {
+    fill: var(--board-river-text);
+    font-family: 'Noto Serif SC', 'Noto Serif TC', 'STKaiti', 'KaiTi', 'Kaiti SC', serif;
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0.5em;
+    user-select: none;
+    text-rendering: geometricPrecision;
+}
+
+.star-mark {
+    stroke: var(--board-grid);
+    stroke-width: 1.5;
+    fill: none;
+    shape-rendering: geometricPrecision;
+}
+
+/* Board Index Numbers (1-9 Top & 9-1 Bottom) */
+.board-index-num {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    fill: var(--board-index-color, #5c2c10);
+    user-select: none;
+    pointer-events: none;
+    text-rendering: geometricPrecision;
+}
+
+[data-theme="obsidian"] .board-index-num {
+    fill: #94a3b8;
+}
+
+[data-theme="jade"] .board-index-num {
+    fill: #2dd4bf;
+    opacity: 0.85;
+}
+
+/* Realistic Particle FX Canvas Layer */
+.fx-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 45;
+}
+
+/* Real-time 3D WebGL Threat & Cannon Canvas */
+.fx-canvas-3d {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 46;
+    background: transparent;
+}
+
+/* Interactive Pieces & Squares Layer */
+.board-layer {
+    position: absolute;
+    top: 30px;
+    left: 22px;
+    width: calc(100% - 44px);
+    height: calc(100% - 60px);
+    pointer-events: none;
+}
+
+/* Piece Token Element - Large & Prominent like Xiangqi.com */
+.piece-wrap {
+    position: absolute;
+    width: 11.2%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+                filter 0.2s ease,
+                opacity 0.2s ease;
+    z-index: 10;
+    will-change: transform;
+    contain: layout style;
+}
+
+.piece-wrap:hover {
+    transform: translate(-50%, -50%) scale(1.1) translateY(-3px);
+    z-index: 18;
+}
+
+/* Click/Selected Float & Distinct Side Auras */
+.piece-wrap.selected {
+    z-index: 25 !important;
+    transform: translate(-50%, -50%) scale(1.18) translateY(-6px);
+    animation: pieceSelectedFloat 1.2s ease-in-out infinite alternate;
+}
+
+/* Red Side Selection: Blazing Imperial Crimson & Gold Ring Aura */
+.piece-wrap.selected.selected-red {
+    filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.95)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.8)) !important;
+}
+
+.piece-wrap.selected.selected-red::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2.5px solid #ffd700;
+    box-shadow: 0 0 18px #ef4444, 0 0 30px rgba(245, 158, 11, 0.7), inset 0 0 12px rgba(239, 68, 68, 0.6);
+    animation: redAuraPulse 1.2s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Black Side Selection: Celestial Cyan & Electric Azure Ring Aura */
+.piece-wrap.selected.selected-black {
+    filter: drop-shadow(0 0 16px rgba(0, 245, 255, 0.95)) drop-shadow(0 0 28px rgba(16, 185, 129, 0.8)) !important;
+}
+
+.piece-wrap.selected.selected-black::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2.5px solid #00f5ff;
+    box-shadow: 0 0 18px #00f5ff, 0 0 30px rgba(6, 182, 212, 0.7), inset 0 0 12px rgba(16, 185, 129, 0.6);
+    animation: cyanAuraPulse 1.2s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes redAuraPulse {
+    0% { transform: scale(0.98); opacity: 0.85; box-shadow: 0 0 14px #ef4444; }
+    100% { transform: scale(1.06); opacity: 1; box-shadow: 0 0 24px #ef4444, 0 0 36px rgba(245, 158, 11, 0.9); }
+}
+
+@keyframes cyanAuraPulse {
+    0% { transform: scale(0.98); opacity: 0.85; box-shadow: 0 0 14px #00f5ff; }
+    100% { transform: scale(1.06); opacity: 1; box-shadow: 0 0 24px #00f5ff, 0 0 36px rgba(16, 185, 129, 0.9); }
+}
+
+@keyframes pieceSelectedFloat {
+    0% {
+        transform: translate(-50%, -50%) scale(1.16) translateY(-4px);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.22) translateY(-8px);
+    }
+}
+
+/* Moving Piece Sliding Glide with Side-Specific Trailing Glow */
+.piece-wrap.piece-moving {
+    z-index: 50 !important;
+    will-change: transform, left, top;
+    transition: left 0.25s cubic-bezier(0.2, 0.9, 0.35, 1.15),
+                top 0.25s cubic-bezier(0.2, 0.9, 0.35, 1.15),
+                transform 0.25s ease !important;
+    transform: translate(-50%, -50%) scale(1.24) translateY(-8px) !important;
+}
+
+.piece-wrap.piece-moving.moving-red {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 16px rgba(239, 68, 68, 0.85)) !important;
+}
+
+.piece-wrap.piece-moving.moving-black {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 16px rgba(0, 245, 255, 0.85)) !important;
+}
+
+/* Enemy Piece Takeout (Captured) Animation */
+.piece-wrap.piece-captured {
+    z-index: 35 !important;
+    pointer-events: none !important;
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.32s ease,
+                filter 0.32s ease !important;
+    transform: translate(-50%, -50%) scale(0.1) rotate(140deg) !important;
+    opacity: 0 !important;
+    filter: brightness(2.8) contrast(1.6) blur(2px) !important;
+}
+
+/* Chariot / Advisor Diagonal Cleave & Split */
+.piece-wrap.piece-split-cleave {
+    z-index: 35 !important;
+    pointer-events: none !important;
+    animation: pieceSplitCleave 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+@keyframes pieceSplitCleave {
+    0% { transform: translate(-50%, -50%) scale(1); filter: brightness(2.2) contrast(1.5); }
+    40% { transform: translate(-50%, -50%) scale(1.15) rotate(14deg); filter: brightness(3.5); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(0.08) rotate(55deg); opacity: 0; filter: blur(4px); }
+}
+
+/* Horse Stomp Crushed / Flattened Effect */
+.piece-wrap.piece-flattened {
+    z-index: 35 !important;
+    pointer-events: none !important;
+    animation: pieceCrushedStomp 0.36s cubic-bezier(0.1, 0.9, 0.2, 1) forwards !important;
+}
+
+@keyframes pieceCrushedStomp {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    35% { transform: translate(-50%, -50%) scale(1.35, 0.28); filter: brightness(2.8); }
+    100% { transform: translate(-50%, -50%) scale(0.2, 0.04); opacity: 0; }
+}
+
+/* Soldier Spear Skewered & Pierced Effect */
+.piece-wrap.piece-skewered {
+    z-index: 35 !important;
+    pointer-events: none !important;
+    animation: pieceSkeweredThrust 0.32s ease-out forwards !important;
+}
+
+@keyframes pieceSkeweredThrust {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    30% { transform: translate(-50%, -50%) scale(1.22) translateY(-6px); filter: brightness(2.8) drop-shadow(0 0 18px #ef4444); }
+    100% { transform: translate(-50%, -50%) scale(0.1) translateY(14px); opacity: 0; }
+}
+
+/* Doomed General / King Paralyzed in Checkmate Execution Reticle */
+.piece-wrap.king-paralyzed {
+    z-index: 48 !important;
+    animation: kingParalyzedTremor 0.14s infinite ease-in-out !important;
+    filter: drop-shadow(0 0 25px #dc2626) drop-shadow(0 0 50px #ef4444) brightness(1.25) contrast(1.2) !important;
+}
+
+@keyframes kingParalyzedTremor {
+    0%, 100% { transform: translate(-50%, -50%) scale(1.2) translate3d(-2px, 1px, 0); }
+    50% { transform: translate(-50%, -50%) scale(1.22) translate3d(2px, -2px, 0); }
+}
+
+/* 3D Camera Zoom to Palace Standoff */
+.board-outer.camera-zoom-palace {
+    transform: perspective(1000px) scale(1.08) rotateX(10deg) translateY(-10px);
+    transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.35, 1.15) !important;
+}
+
+/* Doomed General / King Cornered in Checkmate Surrender Aura (Alive, Spared, Trapped) */
+.piece-wrap.king-surrender-aura {
+    z-index: 48 !important;
+    animation: kingCorneredSweat 0.85s infinite alternate ease-in-out !important;
+    filter: drop-shadow(0 0 25px #f59e0b) drop-shadow(0 0 45px #dc2626) brightness(1.2) !important;
+}
+
+@keyframes kingCorneredSweat {
+    0% { transform: translate(-50%, -50%) scale(1.15); filter: drop-shadow(0 0 16px #f59e0b); }
+    100% { transform: translate(-50%, -50%) scale(1.22); filter: drop-shadow(0 0 35px #dc2626) brightness(1.25); }
+}
+
+.piece-wrap.king-submissive {
+    filter: drop-shadow(0 0 22px #f59e0b) contrast(1.1) !important;
+    transform: translate(-50%, -50%) scale(1.12) rotate(-3deg) !important;
+    transition: all 0.8s ease !important;
+}
+
+/* Cannon Threat Aiming Stance */
+.piece-wrap.threat-cannon-aim {
+    z-index: 49 !important;
+    animation: cannonAimPulse 0.6s infinite alternate ease-in-out !important;
+    filter: drop-shadow(0 0 25px #ea580c) drop-shadow(0 0 42px #f97316) !important;
+}
+
+@keyframes cannonAimPulse {
+    0% { transform: translate(-50%, -50%) scale(1.22); }
+    100% { transform: translate(-50%, -50%) scale(1.32) translateY(-4px); filter: drop-shadow(0 0 38px #ef4444) brightness(1.3); }
+}
+
+/* Chariot Threat Blade Stance */
+.piece-wrap.threat-chariot-blade {
+    z-index: 49 !important;
+    transform: translate(-50%, -50%) scale(1.28) !important;
+    filter: drop-shadow(0 0 35px #f59e0b) drop-shadow(0 0 50px #fbbf24) !important;
+}
+
+/* Horse Threat Rearing Stance */
+.piece-wrap.threat-horse-rear {
+    z-index: 49 !important;
+    transform: translate(-50%, -50%) scale(1.35) translateY(-8px) !important;
+    filter: drop-shadow(0 0 32px #facc15) drop-shadow(0 0 45px #3b82f6) !important;
+}
+
+/* Soldier Threat Point-Blank Spear */
+.piece-wrap.threat-soldier-spear {
+    z-index: 49 !important;
+    transform: translate(-50%, -50%) scale(1.25) translateY(-4px) !important;
+    filter: drop-shadow(0 0 28px #ef4444) drop-shadow(0 0 38px #f87171) !important;
+}
+
+/* Cinematic Dark Vignette Overlay during Checkmate Climax */
+.cinematic-vignette {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 41;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 30%, rgba(10, 5, 2, 0.88) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.cinematic-vignette.active {
+    opacity: 1;
+}
+
+
+
+/* Capture Impact Shockwave Blast */
+.capture-blast {
+    position: absolute;
+    width: 11%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.capture-blast-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3.5px solid #f43f5e;
+    box-shadow: 0 0 24px #f43f5e, inset 0 0 14px #fb7185;
+    animation: blastRing 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.capture-blast-core {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 10%, #f43f5e 60%, transparent 100%);
+    animation: blastCore 0.3s ease-out forwards;
+}
+
+@keyframes blastRing {
+    0% { transform: scale(0.2); opacity: 1; border-width: 4px; }
+    50% { opacity: 0.95; }
+    100% { transform: scale(2.4); opacity: 0; border-width: 1px; }
+}
+
+@keyframes blastCore {
+    0% { transform: scale(0.2); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* ==========================================================================
+   Piece-Specific Tactical Attack Animations (Cannon, Chariot, Horse, Soldier)
+   ========================================================================== */
+
+/* 1. Cannon Artillery Fireball Trail & Detonation (炮打隔子) */
+.cannon-shell {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff, #fbbf24 40%, #ea580c 75%, #7c2d12);
+    box-shadow: 0 0 24px #f97316, 0 0 40px #ef4444;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 45;
+    transition: left 0.2s cubic-bezier(0.2, 0.8, 0.4, 1), top 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.cannon-blast-explosion {
+    position: absolute;
+    width: 18%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cannon-blast-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4.5px solid #f97316;
+    box-shadow: 0 0 35px #f97316, inset 0 0 20px #fbbf24;
+    animation: cannonRing 0.38s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.cannon-blast-fire {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 15%, #fde047 35%, #ea580c 70%, transparent 100%);
+    animation: cannonFire 0.32s ease-out forwards;
+}
+
+@keyframes cannonRing {
+    0% { transform: scale(0.2); opacity: 1; border-width: 6px; }
+    100% { transform: scale(2.6); opacity: 0; border-width: 1px; }
+}
+
+@keyframes cannonFire {
+    0% { transform: scale(0.2); opacity: 1; }
+    50% { opacity: 0.95; }
+    100% { transform: scale(2.0); opacity: 0; }
+}
+
+/* 2. Chariot / Rook Sonic Charge & Metal Slash (车驰电掣 · 铁甲冲阵) */
+.chariot-slash-effect {
+    position: absolute;
+    width: 16%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 42;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chariot-slash-blade {
+    position: absolute;
+    width: 150%;
+    height: 5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, #ffffff 40%, #fbbf24 60%, transparent);
+    box-shadow: 0 0 18px #fbbf24, 0 0 35px #ffffff;
+    animation: chariotSlash 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes chariotSlash {
+    0% { transform: rotate(-35deg) scaleX(0.2); opacity: 1; }
+    60% { transform: rotate(-35deg) scaleX(1.3); opacity: 1; }
+    100% { transform: rotate(-35deg) scaleX(1.6); opacity: 0; }
+}
+
+/* 3. Horse / Knight Gallop & Leaping Hoof Stomp (八面威风 · 踏破敌阵) */
+.horse-hoof-stomp {
+    position: absolute;
+    width: 15%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.horse-hoof-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3.5px solid #eab308;
+    box-shadow: 0 0 26px #eab308, inset 0 0 16px #fef08a;
+    animation: horseStomp 0.36s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes horseStomp {
+    0% { transform: scale(0.3); opacity: 1; border-width: 5px; }
+    70% { transform: scale(1.8); opacity: 0.85; }
+    100% { transform: scale(2.4); opacity: 0; border-width: 1px; }
+}
+
+/* 4. Soldier / Pawn Thrust (勇冠三军 · 锐枪突刺) */
+.soldier-thrust-effect {
+    position: absolute;
+    width: 14%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 42;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.soldier-thrust-line {
+    position: absolute;
+    width: 4px;
+    height: 130%;
+    background: linear-gradient(180deg, #ffffff, #ef4444);
+    box-shadow: 0 0 18px #ef4444;
+    animation: soldierThrust 0.24s ease-out forwards;
+}
+
+@keyframes soldierThrust {
+    0% { transform: scaleY(0.2); opacity: 1; }
+    60% { transform: scaleY(1.3); opacity: 1; }
+    100% { transform: scaleY(1.6); opacity: 0; }
+}
+
+/* Board Rumble on Impact - Disabled per user request (zero screen shake on captures) */
+.board-outer.board-shake,
+.board-outer.flipped.board-shake,
+.board-outer.board-shake-mega {
+    animation: none !important;
+}
+
+.piece-wrap.king-in-check {
+    animation: kingPanic 0.8s infinite ease-in-out;
+}
+
+@keyframes kingPanic {
+    0%, 100% { filter: drop-shadow(0 0 10px #ef4444); }
+    50% { filter: drop-shadow(0 0 24px #ef4444) scale(1.1); }
+}
+
+/* Charging Aura for Checkmating Piece (e.g. Cannon preparing to fire) */
+.piece-wrap.piece-charging {
+    z-index: 48 !important;
+    animation: piecePowerCharge 0.4s ease-in-out infinite alternate !important;
+    filter: drop-shadow(0 0 24px #f59e0b) drop-shadow(0 0 35px #ef4444) !important;
+}
+
+@keyframes piecePowerCharge {
+    0% { transform: translate(-50%, -50%) scale(1.18); filter: drop-shadow(0 0 14px #f59e0b); }
+    100% { transform: translate(-50%, -50%) scale(1.32); filter: drop-shadow(0 0 32px #ef4444) brightness(1.3); }
+}
+
+/* Enemy King defeated / checkmated reaction */
+.piece-wrap.king-defeated {
+    z-index: 46 !important;
+    animation: kingDefeatedShake 0.6s infinite ease-in-out !important;
+    filter: drop-shadow(0 0 28px #dc2626) brightness(1.25) contrast(1.3) !important;
+}
+
+@keyframes kingDefeatedShake {
+    0%, 100% { transform: translate(-50%, -50%) scale(1.15) rotate(0deg); }
+    25% { transform: translate(-50%, -50%) scale(1.22) rotate(-8deg); }
+    75% { transform: translate(-50%, -50%) scale(1.22) rotate(8deg); }
+}
+
+/* 180-degree board rotation for 2-player pass-and-play & Black-side-lower view */
+.board-outer.flipped {
+    transform: rotate(180deg);
+}
+
+.board-outer.flipped .piece-wrap,
+.board-outer.flipped .marker-wrap,
+.board-outer.flipped .last-move-marker,
+.board-outer.flipped .capture-blast {
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.board-outer.flipped .piece-wrap:hover {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.1) translateY(-3px);
+}
+
+.board-outer.flipped .piece-wrap.selected {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.18) translateY(-6px);
+}
+
+.board-outer.flipped .piece-wrap.piece-moving {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.24) translateY(-8px) !important;
+}
+
+.board-outer.flipped .piece-wrap.piece-charging {
+    animation: piecePowerChargeFlipped 0.4s ease-in-out infinite alternate !important;
+}
+
+@keyframes piecePowerChargeFlipped {
+    0% { transform: translate(-50%, -50%) rotate(180deg) scale(1.18); filter: drop-shadow(0 0 14px #f59e0b); }
+    100% { transform: translate(-50%, -50%) rotate(180deg) scale(1.32); filter: drop-shadow(0 0 32px #ef4444) brightness(1.3); }
+}
+
+.board-outer.flipped .king-in-check {
+    animation: kingTrembleSweatFlipped 0.4s infinite alternate !important;
+}
+
+@keyframes kingTrembleSweatFlipped {
+    0% { transform: translate(-50%, -50%) rotate(177deg) scale(1.05); filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.8)) brightness(1.2); }
+    100% { transform: translate(-50%, -50%) rotate(183deg) scale(1.05) translate(2px, 2px); filter: drop-shadow(0 0 25px rgba(220, 38, 38, 1)) brightness(1.4); }
+}
+
+.board-outer.flipped .piece-wrap.king-submissive {
+    filter: drop-shadow(0 0 22px #f59e0b) contrast(1.1) !important;
+    transform: translate(-50%, -50%) rotate(177deg) scale(1.12) !important;
+}
+
+.board-outer.flipped .piece-wrap.threat-chariot-blade {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.28) !important;
+}
+
+.board-outer.flipped .piece-wrap.threat-horse-rear {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.35) translateY(-8px) !important;
+}
+
+.board-outer.flipped .piece-wrap.threat-soldier-spear {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.25) translateY(-4px) !important;
+}
+
+.board-outer.flipped .river-text {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.board-outer.flipped .board-index-num {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(180deg);
+}
+
+.board-outer.flipped .soldier-powerup-banner {
+    animation: bannerRaiseFlipped 1.5s ease-out forwards !important;
+}
+
+@keyframes bannerRaiseFlipped {
+    0% { transform: translate(-50%, -50%) rotate(180deg) translateY(-10px) scale(0.5); opacity: 0; }
+    20% { transform: translate(-50%, -50%) rotate(180deg) translateY(20px) scale(1.2); opacity: 1; }
+    80% { transform: translate(-50%, -50%) rotate(180deg) translateY(30px) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) rotate(180deg) translateY(40px) scale(1); opacity: 0; }
+}
+
+/* SVG Piece Styling - Luxury 3D Imperial Tokens */
+.piece-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.58));
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.18s ease;
+}
+
+/* Calligraphy Text Styling with Authentic KaiTi / Calligraphy Font Stack */
+.piece-char-face,
+.piece-char-shadow,
+.piece-char {
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'BiauKai', 'PingFang SC', 'PingFang TC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans TC', 'Noto Sans SC', sans-serif;
+    font-weight: 700;
+    text-rendering: geometricPrecision;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+.piece-char-en {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-weight: 900;
+    text-rendering: geometricPrecision;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+.piece-symbol {
+    color: inherit;
+    pointer-events: none;
+}
+
+/* Move Markers */
+.marker-wrap {
+    position: absolute;
+    width: 10.5%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 12;
+}
+
+.move-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Red Side Move Hints (Crimson & Amber Glow) */
+.move-dot.dot-red {
+    background: rgba(239, 68, 68, 0.35);
+    border: 2.5px solid #f59e0b;
+    box-shadow: 0 0 14px rgba(239, 68, 68, 0.8), 0 0 6px rgba(245, 158, 11, 0.9);
+}
+
+.marker-wrap:hover .move-dot.dot-red {
+    transform: scale(1.35);
+    background: #ef4444;
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.95), 0 0 10px #ffd700;
+}
+
+.capture-ring.ring-red {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    border: 3px dashed #ef4444;
+    box-shadow: inset 0 0 12px rgba(239, 68, 68, 0.5), 0 0 16px rgba(245, 158, 11, 0.75);
+    animation: rotateCaptureRing 6s linear infinite;
+}
+
+/* Black Side Move Hints (Celestial Azure & Jade Glow) */
+.move-dot.dot-black {
+    background: rgba(6, 182, 212, 0.35);
+    border: 2.5px solid #00f5ff;
+    box-shadow: 0 0 14px rgba(0, 245, 255, 0.8), 0 0 6px rgba(16, 185, 129, 0.9);
+}
+
+.marker-wrap:hover .move-dot.dot-black {
+    transform: scale(1.35);
+    background: #00f5ff;
+    border-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.95), 0 0 10px #10b981;
+}
+
+.capture-ring.ring-black {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    border: 3px dashed #00f5ff;
+    box-shadow: inset 0 0 12px rgba(0, 245, 255, 0.5), 0 0 16px rgba(16, 185, 129, 0.75);
+    animation: rotateCaptureRing 6s linear infinite;
+}
+
+@keyframes rotateCaptureRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Last Move Dot Indicators & Ambient Square Halos */
+.last-move-marker {
+    position: absolute;
+    width: 10.5%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.last-move-marker.is-from {
+    z-index: 6;
+}
+
+.last-move-marker.is-dest {
+    z-index: 16;
+}
+
+/* Most Recent Move: Full Intensity & Top Layer */
+.last-move-marker.is-current {
+    opacity: 1;
+}
+
+.last-move-marker.is-current.is-dest {
+    z-index: 18;
+}
+
+/* Previous Opponent Move: Preserved with Calm Ambient Presence */
+.last-move-marker.is-previous {
+    opacity: 0.72;
+}
+
+.last-move-marker.is-previous.is-dest {
+    z-index: 15;
+}
+
+.last-move-marker.is-previous .last-move-dot.from-dot::after {
+    animation-duration: 3.2s;
+    opacity: 0.45;
+}
+
+.last-move-marker.is-previous .last-move-dot.dest-dot {
+    transform: scale(0.92);
+    filter: brightness(0.92);
+}
+
+/* Red Last Move: Atmospheric Crimson & Gold Board Halos */
+.last-move-marker.is-from.side-red {
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.08) 55%, transparent 75%);
+}
+
+.last-move-marker.is-dest.side-red {
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(239, 68, 68, 0.08) 55%, transparent 75%);
+}
+
+/* Black Last Move: Atmospheric Celestial Azure & Jade Board Halos */
+.last-move-marker.is-from.side-black {
+    background: radial-gradient(circle, rgba(0, 245, 255, 0.3) 0%, rgba(6, 182, 212, 0.08) 55%, transparent 75%);
+}
+
+.last-move-marker.is-dest.side-black {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, rgba(0, 245, 255, 0.08) 55%, transparent 75%);
+}
+
+/* Red Origin Dot: Crimson Core with Gold/Red Pulse */
+.last-move-dot.from-dot.dot-red,
+.last-move-dot.from-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2.5px solid #ffffff;
+    box-shadow: 0 0 12px #ef4444, 0 0 22px rgba(245, 158, 11, 0.85);
+    position: relative;
+}
+
+.last-move-dot.from-dot.dot-red::after,
+.last-move-dot.from-dot::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px solid #ef4444;
+    opacity: 0.85;
+    animation: fromDotPulseRed 2s ease-out infinite;
+}
+
+@keyframes fromDotPulseRed {
+    0% { transform: scale(0.7); opacity: 0.95; }
+    70% { transform: scale(2.0); opacity: 0; }
+    100% { transform: scale(2.0); opacity: 0; }
+}
+
+/* Red Destination Dot: Blazing Imperial Amber/Gold Beacon Badge */
+.last-move-dot.dest-dot.dot-red,
+.last-move-dot.dest-dot {
+    position: absolute;
+    top: 6%;
+    right: 6%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffd700;
+    border: 2px solid #b91c1c;
+    box-shadow: 0 0 12px #ffd700, 0 0 20px rgba(239, 68, 68, 0.9);
+    animation: destDotPing 1.6s ease-in-out infinite alternate;
+}
+
+/* Black Origin Dot: Electric Cyan Core with Ice Azure Pulse */
+.last-move-dot.from-dot.dot-black {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #00f5ff;
+    border: 2.5px solid #ffffff;
+    box-shadow: 0 0 12px #00f5ff, 0 0 22px rgba(6, 182, 212, 0.85);
+    position: relative;
+}
+
+.last-move-dot.from-dot.dot-black::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1.5px solid #00f5ff;
+    opacity: 0.85;
+    animation: fromDotPulseBlack 2s ease-out infinite;
+}
+
+@keyframes fromDotPulseBlack {
+    0% { transform: scale(0.7); opacity: 0.95; }
+    70% { transform: scale(2.0); opacity: 0; }
+    100% { transform: scale(2.0); opacity: 0; }
+}
+
+/* Black Destination Dot: Electric Jade/Teal Beacon Badge */
+.last-move-dot.dest-dot.dot-black {
+    position: absolute;
+    top: 6%;
+    right: 6%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 2px solid #0369a1;
+    box-shadow: 0 0 12px #10b981, 0 0 20px rgba(0, 245, 255, 0.9);
+    animation: destDotPing 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes destDotPing {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.25); filter: brightness(1.35); }
+}
+
+/* Control Buttons & Dropdowns */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.06);
+    color: #e2e8f0;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0369a1, #075985);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.5);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+.btn-icon {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.btn-fullscreen {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1f5f9;
+}
+
+.btn-fullscreen:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.32);
+    color: #ffffff;
+}
+
+/* Toggle Switch */
+.toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: #94a3b8;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.12);
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #cbd5e1;
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #0284c7;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+    background-color: #fff;
+}
+
+/* Move History Log */
+.history-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    overflow: hidden;
+}
+
+.history-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr;
+    padding: 0 6px;
+    gap: 6px;
+    align-items: center;
+}
+
+.history-header span:nth-child(1) {
+    color: #64748b;
+}
+
+.history-header span:nth-child(2) {
+    color: #ef4444;
+}
+
+.history-header span:nth-child(3) {
+    color: #38bdf8;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85rem;
+}
+
+.history-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr;
+    padding: 4px 6px;
+    border-radius: 6px;
+    align-items: center;
+    gap: 6px;
+}
+
+.history-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.history-row .step-no {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.history-row .red-move {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.history-row .black-move {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 28px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    transform: scale(0.92);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.open .modal-card {
+    transform: scale(1);
+}
+
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.modal-body {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   Fullscreen Mode Styles (:fullscreen and body.fullscreen-mode)
+   ========================================================================== */
+:fullscreen,
+body.fullscreen-mode {
+    overflow: hidden !important;
+}
+
+:fullscreen .app-header,
+body.fullscreen-mode .app-header {
+    padding: 6px 20px;
+    background: rgba(14, 18, 27, 0.95);
+}
+
+:fullscreen .game-container,
+body.fullscreen-mode .game-container {
+    height: calc(100vh - 52px);
+    max-height: calc(100vh - 52px);
+    padding: 6px 16px;
+    gap: 16px;
+    max-width: 100vw;
+}
+
+:fullscreen .board-svg,
+body.fullscreen-mode .board-svg {
+    width: min(88vh, 90vw);
+    height: min(99vh, 101.25vw);
+    max-width: 820px;
+    max-height: 922px;
+}
+
+:fullscreen .hud-panel,
+body.fullscreen-mode .hud-panel {
+    width: 220px;
+    max-height: calc(100vh - 66px);
+    padding: 10px 12px;
+    gap: 8px;
+}
+
+:fullscreen .player-card,
+body.fullscreen-mode .player-card {
+    padding: 8px 12px;
+    gap: 6px;
+}
+
+:fullscreen .history-section,
+body.fullscreen-mode .history-section {
+    min-height: 120px;
+}
+
+/* ==========================================================================
+   Responsive adjustments for laptops, tablets, and phones
+   ========================================================================== */
+@media (max-width: 1280px) {
+    .hud-panel {
+        width: 210px;
+        padding: 12px;
+    }
+    .game-container {
+        gap: 12px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 1020px) {
+    .game-container {
+        flex-direction: column;
+        gap: 14px;
+        padding: 10px 8px;
+    }
+
+    .hud-panel {
+        width: 100%;
+        max-width: 720px;
+        max-height: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .player-card {
+        flex: 1 1 45%;
+        min-width: 220px;
+    }
+
+    .history-section {
+        display: none; /* Hide detailed history on smaller mobile screens */
+    }
+}
+
+/* ==========================================================================
+   NEW CINEMATIC STYLES
+   ========================================================================== */
+
+/* Graveyard Panel */
+.graveyard-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 48px;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.graveyard-panel::before {
+    content: "GRAVEYARD";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.05);
+    font-weight: 900;
+    pointer-events: none;
+    letter-spacing: 0.2em;
+}
+
+/* Red Vignette Pulse for Check */
+.check-vignette {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 41;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 40%, var(--fx-vignette-edge, rgba(220, 38, 38, 0.25)) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.check-vignette.active {
+    opacity: 1;
+    animation: pulseCheckVignette 1.5s infinite alternate;
+}
+
+@keyframes pulseCheckVignette {
+    0% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+/* Palace Glow Red */
+.palace-in-check {
+    filter: drop-shadow(0 0 30px rgba(220, 38, 38, 0.6));
+    transition: filter 0.3s;
+}
+
+/* General Tremble and Sweat */
+.king-in-check {
+    animation: kingTrembleSweat 0.4s infinite alternate !important;
+}
+
+@keyframes kingTrembleSweat {
+    0% { transform: translate(-50%, -50%) rotate(-3deg) scale(1.05); filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.8)) brightness(1.2); }
+    100% { transform: translate(-50%, -50%) rotate(3deg) scale(1.05) translate(2px, 2px); filter: drop-shadow(0 0 25px rgba(220, 38, 38, 1)) brightness(1.4); }
+}
+
+/* Water Splash and Banner Raise for Soldier Crossing River */
+.soldier-powerup-splash {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 38;
+    animation: waterSplash 0.6s ease-out forwards;
+}
+
+.soldier-powerup-splash.splash-red {
+    background: radial-gradient(circle, rgba(239, 68, 68, 0.85) 0%, rgba(245, 158, 11, 0.4) 40%, transparent 70%);
+}
+
+.soldier-powerup-splash.splash-black,
+.soldier-powerup-splash.splash-blue {
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, transparent 70%);
+}
+
+@keyframes waterSplash {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+.soldier-powerup-banner {
+    position: absolute;
+    font-family: 'Ma Shan Zheng', cursive, 'Kaiti SC', 'STKaiti', serif;
+    font-weight: 900;
+    font-size: 2.2rem;
+    letter-spacing: 0.15em;
+    z-index: 55;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: bannerRaise 1.5s ease-out forwards;
+    will-change: transform, opacity;
+}
+
+/* Red Soldier Cross River: Fiery Imperial Red Text & Glow */
+.soldier-powerup-banner.banner-red {
+    color: #ef4444;
+    text-shadow: 0 0 16px rgba(239, 68, 68, 0.95), 0 0 32px rgba(245, 158, 11, 0.85), 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* Blue/Black Soldier Cross River: Current Celestial Cyan/Blue Text Color */
+.soldier-powerup-banner.banner-black,
+.soldier-powerup-banner.banner-blue,
+.soldier-powerup-banner {
+    color: #38bdf8;
+    text-shadow: 0 0 16px rgba(56, 189, 248, 0.95), 0 0 30px rgba(14, 165, 233, 0.8), 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes bannerRaise {
+    0% { transform: translate(-50%, -50%) translateY(10px) scale(0.5); opacity: 0; }
+    20% { transform: translate(-50%, -50%) translateY(-20px) scale(1.2); opacity: 1; }
+    80% { transform: translate(-50%, -50%) translateY(-30px) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) translateY(-40px) scale(1); opacity: 0; }
+}
+
+/* Checkmate Effects */
+.freeze-frame {
+    filter: grayscale(0.8) contrast(1.2) brightness(0.7) !important;
+    transition: filter 0.5s;
+}
+
+.impact-flash {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+}
+.impact-flash.fire {
+    animation: flashAnim 0.8s ease-out forwards;
+}
+@keyframes flashAnim {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Dimming board except killer and General */
+.board-dimmed .piece-wrap:not(.killer-piece):not(.doomed-general) {
+    filter: brightness(0.3) grayscale(0.8) !important;
+    transition: filter 0.5s;
+}
+
+.killer-piece {
+    z-index: 60 !important;
+    filter: drop-shadow(0 0 40px #fbbf24) brightness(1.5) !important;
+}
+
+.doomed-general {
+    z-index: 60 !important;
+    filter: drop-shadow(0 0 40px #ef4444) brightness(1.2) !important;
+}
+
+/* General crown falls, flag lowers, palace crumbles */
+.falling-crown {
+    position: absolute;
+    font-size: 2rem;
+    z-index: 61;
+    animation: crownFall 2s ease-in forwards;
+}
+@keyframes crownFall {
+    0% { transform: translate(-50%, -50%) translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-50%, -50%) translateY(100px) rotate(180deg); opacity: 0; }
+}
+
+.palace-crumble {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(139, 69, 19, 0.8) 0%, transparent 60%);
+    z-index: 5;
+    animation: crumbleEffect 2s ease-out forwards;
+    transform: translate(-50%, -50%);
+}
+@keyframes crumbleEffect {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* Confetti and Lanterns */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #facc15;
+    z-index: 200;
+    animation: confettiFall 3s linear forwards;
+}
+@keyframes confettiFall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+.lantern {
+    position: fixed;
+    width: 40px;
+    height: 50px;
+    background: red;
+    border-radius: 20px;
+    z-index: 199;
+    box-shadow: 0 0 20px red;
+    animation: lanternFloat 5s ease-in forwards;
+}
+@keyframes lanternFloat {
+    0% { transform: translateY(110vh) scale(1); opacity: 1; }
+    100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+}
+
+/* NEW CINEMATIC ANIMATIONS */
+
+/* Chariot Launch */
+.piece-launched {
+    animation: chariotLaunch 1s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+@keyframes chariotLaunch {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { opacity: 1; }
+    100% { transform: translate(300px, -500px) scale(0.2) rotate(1440deg); opacity: 0; }
+}
+
+/* Horse Stomp */
+.piece-stomped {
+    animation: horseStomp 0.5s ease-in forwards;
+}
+@keyframes horseStomp {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) translateY(-20px); filter: brightness(1.5); }
+    100% { transform: scale(1) translateY(10px) rotateX(45deg); opacity: 0; }
+}
+
+/* War Cry Bubble for Soldier */
+.war-cry-bubble {
+    position: absolute;
+    top: -30px;
+    left: 20px;
+    background: white;
+    color: black;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    border: 2px solid black;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0);
+    animation: popBubble 1s ease-out forwards;
+    z-index: 100;
+}
+.war-cry-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 10px;
+    border-width: 6px 6px 0 0;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+@keyframes popBubble {
+    0% { transform: scale(0) translateY(10px); opacity: 0; }
+    20% { transform: scale(1.2) translateY(0); opacity: 1; }
+    40% { transform: scale(1) translateY(0); opacity: 1; }
+    80% { transform: scale(1) translateY(0); opacity: 1; }
+    100% { transform: scale(0.8) translateY(-10px); opacity: 0; }
+}
+
+/* Imperial Stamp for General */
+.imperial-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="none" stroke="red" stroke-width="5"/><text x="50" y="65" font-size="40" fill="red" text-anchor="middle" font-family="serif" font-weight="bold">死</text></svg>');
+    background-size: cover;
+    opacity: 0;
+    transform: scale(3);
+    animation: slamStamp 1s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    z-index: 100;
+    pointer-events: none;
+}
+@keyframes slamStamp {
+    0% { transform: scale(4); opacity: 0; }
+    20% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 10px red); }
+    80% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.piece-ink-shatter {
+    animation: inkShatter 0.6s forwards;
+}
+@keyframes inkShatter {
+    0% { filter: brightness(1) sepia(0); opacity: 1; transform: scale(1); }
+    50% { filter: brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5); opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(0.5) translateY(20px); filter: blur(5px); }
+}
+
+
+/* Spear DOM Animation */
+.physical-spear {
+    position: absolute;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #ccc, #fff, #999);
+    border-radius: 50% 10% 10% 50%;
+    z-index: 99;
+    box-shadow: 0 0 5px white;
+    transform-origin: left center;
+    opacity: 0;
+    pointer-events: none;
+    animation: spearThrust 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+.physical-spear::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: -3px;
+    width: 0; 
+    height: 0; 
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 15px solid red;
+    filter: drop-shadow(0 0 2px red);
+}
+@keyframes spearThrust {
+    0% { transform: scaleX(0.2) translateX(-20px); opacity: 0; }
+    30% { transform: scaleX(1.5) translateX(0); opacity: 1; }
+    80% { transform: scaleX(1) translateX(20px); opacity: 1; }
+    100% { transform: scaleX(0) translateX(40px); opacity: 0; }
+}
+
+/* Cannonball DOM Animation */
+.physical-cannonball {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle at 30% 30%, #fff, #ff5500, #330000);
+    border-radius: 50%;
+    z-index: 100;
+    box-shadow: 0 0 15px #ff5500, inset 0 0 5px black;
+    pointer-events: none;
+}
+.cannonball-arc {
+    animation: cannonArc 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+@keyframes cannonArc {
+    0% { transform: scale(0.5); opacity: 1; }
+    50% { transform: scale(1.5); filter: drop-shadow(0 20px 10px rgba(0,0,0,0.5)); }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+
+/* Decals */
+.crosshair-decal {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    background: radial-gradient(circle, transparent 40%, rgba(255,0,0,0.5) 50%, transparent 60%);
+    border: 2px dashed red;
+    border-radius: 50%;
+    animation: lockOn 1s forwards;
+    pointer-events: none;
+    z-index: 10;
+}
+@keyframes lockOn {
+    0% { transform: scale(3) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1) rotate(90deg); opacity: 1; }
+    100% { transform: scale(0.5) rotate(180deg); opacity: 0; }
+}
+
+.scorch-decal {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    margin-left: -30px;
+    margin-top: -30px;
+    background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+    animation: scorchFade 5s forwards;
+}
+@keyframes scorchFade {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
+.epic-text-3d {
+    position: absolute;
+    color: #ff3300;
+    font-family: 'Ma Shan Zheng', 'ZCOOL QingKe HuangYou', cursive;
+    font-size: 8rem;
+    font-weight: 900;
+    text-shadow: 
+        0 0 20px #ffaa00,
+        0 0 40px #ff0000,
+        5px 5px 0 #330000;
+    transform: translate(-50%, -50%) scale(5) rotate3d(1, 0, 0, 90deg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* ==========================================================================
+   Multiplayer Online Overlays, Lobby, Waiting Room & In-Game Sidebar Styles
+   ========================================================================== */
+
+.mp-status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 8px;
+    box-shadow: 0 0 8px currentColor;
+    transition: background-color 0.3s ease;
+}
+.mp-status-dot.online {
+    background-color: #22c55e;
+    color: #22c55e;
+}
+.mp-status-dot.offline {
+    background-color: #ef4444;
+    color: #ef4444;
+}
+.mp-status-dot.warning {
+    background-color: #f59e0b;
+    color: #f59e0b;
+    animation: mp-pulse 1.2s infinite;
+}
+
+@keyframes mp-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+}
+
+/* Buttons */
+.btn-danger {
+    background: #dc2626 !important;
+    color: #fff !important;
+    border-color: #b91c1c !important;
+}
+.btn-danger:hover {
+    background: #b91c1c !important;
+}
+.btn-warning {
+    background: #d97706 !important;
+    color: #fff !important;
+    border-color: #b45309 !important;
+}
+.btn-warning:hover {
+    background: #b45309 !important;
+}
+
+/* Form Inputs */
+.mp-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+.mp-input:focus {
+    border-color: var(--accent-amber);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+.mp-select {
+    width: 100%;
+    padding: 10px 14px;
+    background: #1c140d;
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* Lobby Overlay & Layout */
+.mp-lobby-card {
+    max-width: 640px !important;
+    width: 95% !important;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 24px;
+}
+
+.mp-lobby-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+}
+
+.mp-user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #fef08a;
+    font-size: 1rem;
+}
+
+.mp-lobby-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.mp-join-code-wrap {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    min-width: 220px;
+}
+
+.mp-room-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 45vh;
+    padding-right: 4px;
+}
+
+.mp-room-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.mp-room-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.mp-room-title {
+    font-weight: 700;
+    color: #f1f5f9;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.mp-room-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.mp-code-tag {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.mp-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+.mp-badge-waiting {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.mp-badge-playing {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.mp-empty-rooms {
+    text-align: center;
+    padding: 36px 16px;
+    color: #64748b;
+}
+
+/* Waiting Room */
+.mp-waiting-code-display {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: #f59e0b;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px dashed rgba(245, 158, 11, 0.4);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin: 18px 0;
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.mp-pulse-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(245, 158, 11, 0.2);
+    border-top-color: #f59e0b;
+    border-radius: 50%;
+    animation: mp-spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+@keyframes mp-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Chat Panel */
+.mp-chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 190px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.mp-chat-header {
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mp-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+}
+
+.mp-chat-bubble {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 4px 8px;
+    max-width: 90%;
+    align-self: flex-start;
+}
+.mp-chat-bubble.self {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    align-self: flex-end;
+}
+.mp-chat-bubble.system {
+    background: transparent;
+    border: none;
+    align-self: center;
+    color: #f59e0b;
+    font-style: italic;
+    font-size: 0.75rem;
+}
+
+.mp-chat-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+.mp-chat-sender {
+    font-weight: 700;
+    color: #e2e8f0;
+}
+.mp-chat-bubble.self .mp-chat-sender {
+    color: #f59e0b;
+}
+
+.mp-chat-input-row {
+    display: flex;
+    gap: 4px;
+    padding: 6px 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+}
+.mp-chat-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: #fff;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+    outline: none;
+}
+.mp-chat-send {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+}
+
+/* Toast Notifications */
+.mp-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    pointer-events: none;
+}
+.mp-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+.mp-toast.error {
+    border-color: #ef4444;
+    color: #fca5a5;
+}
+.mp-toast.success {
+    border-color: #22c55e;
+    color: #86efac;
+}
+
+/* Reconnect Overlay */
+.mp-reconnect-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #dc2626;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.mp-reconnect-overlay.show {
+    display: block;
+}
+
+/* In-Game Multiplayer Turn Banner */
+.mp-turn-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 10px;
+    padding: 8px 16px;
+    margin-bottom: 8px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.mp-turn-banner.my-turn {
+    border-color: #22c55e;
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.18), rgba(15, 23, 42, 0.9));
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+}
+
+.mp-turn-banner.opponent-turn {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.7);
+}
+
+.mp-turn-badge {
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.mp-turn-badge.badge-my-turn {
+    background: #22c55e;
+    color: #0f172a;
+    animation: mp-pulse 1.5s infinite;
+}
+
+.mp-turn-badge.badge-opponent-turn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+}
+
+.mp-turn-details {
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    font-weight: 600;
+    text-align: right;
+    flex: 1;
+}
+
+/* ==========================================================================
+   Phase 3 — CheckVFX cinematic overlays (js/check-vfx.js)
+   --------------------------------------------------------------------------
+   ADDITIVE ONLY: every selector below is new and `fx-check-`-prefixed (plus
+   the #fxCheckLayer container and #checkVignette.fx-check-double state).
+   Nothing above this block is modified.
+   - All motion is transform/opacity CSS keyframes (GPU-friendly, 60fps).
+   - Trauma shake + hit-stop stay OFF per binding user decision: impact comes
+     from easing, layering and anticipation — never screen shake or freezing.
+   - prefers-reduced-motion: animations are stilled at the bottom of this
+     block; overlays render as static glows and the cinematic zoom is off.
+   ========================================================================== */
+
+/* Dedicated overlay container inside #boardOuter (created lazily by CheckVFX) */
+#fxCheckLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    overflow: visible;
+}
+
+/* Base for rotated line overlays (laser, lane, spear) */
+.fx-check-line {
+    position: absolute;
+    transform-origin: 0 50%;
+    pointer-events: none;
+}
+
+/* 1. Trembling general — danger jitter on the piece element itself.
+   Keyframes carry the base translate(-50%,-50%) so the piece never jumps. */
+.piece-wrap.fx-check-tremble {
+    z-index: 49 !important;
+    filter: drop-shadow(0 0 18px #ef4444) brightness(1.15) !important;
+    animation: fx-check-tremble 0.32s linear infinite;
+}
+@keyframes fx-check-tremble {
+    0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+    20% { transform: translate(-50%, -50%) translate(-2px, 1px) rotate(-1.2deg); }
+    40% { transform: translate(-50%, -50%) translate(2px, -1px) rotate(1deg); }
+    60% { transform: translate(-50%, -50%) translate(-1.5px, -1.5px) rotate(0.6deg); }
+    80% { transform: translate(-50%, -50%) translate(1.5px, 1.5px) rotate(-0.6deg); }
+}
+/* Flipped-board variant keeps the 180deg orientation while trembling */
+.board-outer.flipped .piece-wrap.fx-check-tremble {
+    animation-name: fx-check-tremble-flipped;
+}
+@keyframes fx-check-tremble-flipped {
+    0%, 100% { transform: translate(-50%, -50%) rotate(180deg) translate(0, 0); }
+    25% { transform: translate(-50%, -50%) rotate(178.6deg) translate(-2px, 1px); }
+    50% { transform: translate(-50%, -50%) rotate(181.2deg) translate(2px, -1px); }
+    75% { transform: translate(-50%, -50%) rotate(179deg) translate(-1.5px, -1px); }
+}
+
+/* 2. Sweat droplets — capped at 3 DOM nodes, staggered fall-and-fade */
+.fx-check-sweat {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 42;
+}
+.fx-check-sweat-drop {
+    position: absolute;
+    top: -38px;
+    font-size: 17px;
+    line-height: 1;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px rgba(125, 211, 252, 0.8));
+    animation: fx-check-sweat-fall 1.5s ease-in infinite;
+}
+@keyframes fx-check-sweat-fall {
+    0% { transform: translateY(-4px) scale(0.7); opacity: 0; }
+    22% { opacity: 1; }
+    70% { transform: translateY(30px) scale(1); opacity: 1; }
+    100% { transform: translateY(40px) scale(0.9); opacity: 0; }
+}
+
+/* 3. Palace glow — pulsing red aura over the 3x3 palace tiles */
+.fx-check-palace {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    border-radius: 12px;
+    background: radial-gradient(ellipse at center,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0.30) 0%,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0.12) 62%,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0) 100%);
+    box-shadow: inset 0 0 36px rgba(var(--fx-check-danger, 239, 68, 68), 0.55),
+                0 0 28px rgba(var(--fx-check-danger, 239, 68, 68), 0.35);
+    animation: fx-check-palace-pulse 1.1s ease-in-out infinite;
+}
+@keyframes fx-check-palace-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* 4. Cannon dotted laser — marching-dot aim line + target reticle.
+   Extends the vfx.js playCheckLaserSight sightline as a DOM "aiming" variant. */
+.fx-check-laser {
+    height: 0;
+    margin-top: -2px;
+    border-top: 4px dotted rgba(var(--fx-check-danger, 239, 68, 68), 0.95);
+    filter: drop-shadow(0 0 6px rgba(var(--fx-check-danger, 239, 68, 68), 0.85));
+    animation: fx-check-laser-pulse 0.8s ease-in-out infinite;
+}
+@keyframes fx-check-laser-pulse {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+}
+.fx-check-reticle {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(var(--fx-check-danger, 239, 68, 68), 0.9);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fx-check-reticle-ping 1s ease-out infinite;
+}
+.fx-check-reticle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background: rgb(var(--fx-check-danger, 239, 68, 68));
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgb(var(--fx-check-danger, 239, 68, 68));
+}
+@keyframes fx-check-reticle-ping {
+    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* 5. Chariot lane — glowing red band along the file/rank + chevrons
+   pointing at the general */
+.fx-check-lane {
+    height: 18px;
+    margin-top: -9px;
+    background: linear-gradient(90deg,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0) 0%,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0.45) 18%,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0.45) 82%,
+        rgba(var(--fx-check-danger, 239, 68, 68), 0) 100%);
+    box-shadow: 0 0 22px rgba(var(--fx-check-danger, 239, 68, 68), 0.5);
+    border-radius: 9px;
+    animation: fx-check-lane-breathe 1s ease-in-out infinite;
+}
+@keyframes fx-check-lane-breathe {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 0.95; }
+}
+.fx-check-chevron {
+    position: absolute;
+    color: var(--fx-check-danger-soft, #fca5a5);
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 0 10px rgb(var(--fx-check-danger, 239, 68, 68)), 0 0 20px rgba(var(--fx-check-danger, 239, 68, 68), 0.7);
+    pointer-events: none;
+    z-index: 41;
+    animation: fx-check-chevron-surge 0.9s ease-in-out infinite;
+}
+@keyframes fx-check-chevron-surge {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 1; }
+}
+
+/* 6. Horse ghost trail — flashing translucent horse glyphs along the path */
+.fx-check-ghost {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'BiauKai', 'PingFang SC', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    color: rgb(var(--fx-check-danger, 239, 68, 68));
+    text-shadow: 0 0 12px rgba(var(--fx-check-danger, 239, 68, 68), 0.9), 0 0 26px rgba(var(--fx-check-danger, 239, 68, 68), 0.5);
+    pointer-events: none;
+    z-index: 9;
+    opacity: 0;
+    animation: fx-check-ghost-flash 1.05s ease-in-out infinite;
+}
+@keyframes fx-check-ghost-flash {
+    0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+    50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.05); }
+}
+.board-outer.flipped .fx-check-ghost {
+    transform: translate(-50%, -50%) rotate(180deg);
+    animation-name: fx-check-ghost-flash-flipped;
+}
+@keyframes fx-check-ghost-flash-flipped {
+    0%, 100% { opacity: 0; transform: translate(-50%, -50%) rotate(180deg) scale(0.92); }
+    50% { opacity: 0.85; transform: translate(-50%, -50%) rotate(180deg) scale(1.05); }
+}
+
+/* 7. Soldier spear — shaft lowered toward the general + faint squad silhouettes */
+.fx-check-spear {
+    height: 6px;
+    margin-top: -3px;
+    background: linear-gradient(90deg, rgba(127, 29, 29, 0.9), rgb(var(--fx-check-danger, 239, 68, 68)));
+    box-shadow: 0 0 12px rgba(var(--fx-check-danger, 239, 68, 68), 0.9);
+    border-radius: 3px;
+    animation: fx-check-spear-throb 0.7s ease-in-out infinite;
+}
+.fx-check-spear::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 14px solid var(--fx-check-danger-soft, #fca5a5);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    filter: drop-shadow(0 0 6px rgb(var(--fx-check-danger, 239, 68, 68)));
+}
+@keyframes fx-check-spear-throb {
+    0%, 100% { opacity: 0.75; }
+    50% { opacity: 1; }
+}
+.fx-check-squad {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'Kaiti SC', 'STKaiti', 'KaiTi', 'BiauKai', 'PingFang SC', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    color: rgba(252, 165, 165, 0.35);
+    filter: blur(0.6px);
+    pointer-events: none;
+    z-index: 8;
+}
+
+/* 8. Flying-general duel — lightning bolt + cinematic zoom (smooth scale) */
+.fx-check-bolt-svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 41;
+}
+.fx-check-bolt {
+    fill: none;
+    stroke: #fef08a;
+    stroke-width: 3.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 7px #ef4444) drop-shadow(0 0 16px #f59e0b);
+    animation: fx-check-bolt-flicker 0.45s steps(2, end) infinite;
+}
+@keyframes fx-check-bolt-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+.fx-check-duel-flash {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 3px solid rgba(254, 240, 138, 0.9);
+    box-shadow: 0 0 24px rgba(239, 68, 68, 0.9), inset 0 0 18px rgba(245, 158, 11, 0.7);
+    pointer-events: none;
+    animation: fx-check-duel-flash-ring 0.9s ease-out infinite;
+}
+@keyframes fx-check-duel-flash-ring {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+/* Cinematic zoom: eased scale on #boardOuter (its 0.6s transform transition
+   makes it a smooth push-in; NOT a shake — trauma stays off). */
+.board-outer.fx-check-duel-zoom {
+    transform: scale(1.07);
+}
+.board-outer.flipped.fx-check-duel-zoom {
+    transform: rotate(180deg) scale(1.07);
+}
+
+/* 9. Double-check — stronger red vignette pulse on #checkVignette */
+#checkVignette.fx-check-double {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 41;
+    background: radial-gradient(ellipse at center,
+        rgba(220, 38, 38, 0) 42%,
+        rgba(220, 38, 38, 0.55) 100%);
+    animation: fx-check-double-pulse 0.9s ease-in-out infinite;
+}
+@keyframes fx-check-double-pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+}
+
+/* prefers-reduced-motion: still every check animation. Overlays render as
+   static glows; the duel zoom is disabled (flip orientation is preserved). */
+@media (prefers-reduced-motion: reduce) {
+    .piece-wrap.fx-check-tremble,
+    .board-outer.flipped .piece-wrap.fx-check-tremble {
+        animation: none;
+    }
+    .fx-check-sweat-drop,
+    .fx-check-palace,
+    .fx-check-laser,
+    .fx-check-reticle,
+    .fx-check-lane,
+    .fx-check-chevron,
+    .fx-check-spear,
+    .fx-check-bolt,
+    .fx-check-duel-flash,
+    #checkVignette.fx-check-double {
+        animation: none;
+    }
+    .fx-check-ghost,
+    .board-outer.flipped .fx-check-ghost {
+        animation: none;
+        opacity: 0.5;
+    }
+    .fx-check-sweat-drop { opacity: 0.9; }
+    .board-outer.fx-check-duel-zoom {
+        transform: none;
+    }
+    .board-outer.flipped.fx-check-duel-zoom {
+        transform: rotate(180deg);
+    }
+}
+
+/* ==========================================================================
+   Phase 4 — CheckmateVFX cinematic overlays (js/checkmate-vfx.js)
+   --------------------------------------------------------------------------
+   ADDITIVE ONLY: every selector below is new and `fx-mate-`-prefixed (plus
+   the #fxMateLayer board-space container and #fxMateScreen screen-space
+   container). Nothing above this block is modified.
+   - All motion is transform/opacity CSS keyframes (GPU-friendly, 60fps).
+   - Trauma shake + hit-stop stay OFF per binding user decision: impact comes
+     from easing, layering and anticipation — never screen shake or freezing.
+   - prefers-reduced-motion: animations are stilled at the bottom of this
+     block; overlays render as static frames and the camera push-in is off.
+   ========================================================================== */
+
+/* Board-space overlay container inside #boardOuter (created lazily).
+   Above #fxCheckLayer (40), below #fxCanvas (45). */
+#fxMateLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 41;
+    overflow: visible;
+}
+
+/* Screen-space overlay container, fixed full-viewport (created lazily).
+   Above the board, below game-over modals. */
+#fxMateScreen {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+    overflow: hidden;
+}
+
+/* Palace-anchored effect zone (positioned over a palace rect by JS). */
+.fx-mate-zone {
+    position: absolute;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* --- Global: freeze-frame impact flash (white hold, then decay). --- */
+.fx-mate-flash {
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    animation: fx-mate-flash 0.75s ease-out forwards;
+}
+@keyframes fx-mate-flash {
+    0%   { opacity: 0; }
+    12%  { opacity: 0.92; }
+    30%  { opacity: 0.85; }
+    100% { opacity: 0; }
+}
+
+/* --- Global: camera push-in toward a cell (transform on #boardLayer). --- */
+.board-layer.fx-mate-pushin {
+    transform: scale(1.32);
+    transition: transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* --- Global: dim veil + keeper glow. --- */
+.fx-mate-dimveil {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 4, 8, 0.68);
+    z-index: 20;
+    pointer-events: none;
+    animation: fx-mate-dimveil 0.6s ease-out;
+}
+@keyframes fx-mate-dimveil {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.piece-wrap.fx-mate-keep {
+    z-index: 21;
+    animation: fx-mate-keep 1.6s ease-in-out infinite;
+}
+@keyframes fx-mate-keep {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 215, 90, 0.9)); }
+    50%      { filter: drop-shadow(0 0 16px rgba(255, 215, 90, 1)); }
+}
+.piece-wrap.fx-mate-dimmed {
+    opacity: 0.35;
+    filter: saturate(0.4);
+}
+
+/* --- Cannon finale A: palace explosion. --- */
+.fx-mate-fireball {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 130px;
+    height: 130px;
+    margin: -65px 0 0 -65px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff7d6 0%, #ffd34d 28%, #fb923c 55%, rgba(239, 68, 68, 0.55) 78%, transparent 100%);
+    mix-blend-mode: screen;
+    animation: fx-mate-fireball 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+@keyframes fx-mate-fireball {
+    0%   { transform: scale(0.15); opacity: 0; }
+    18%  { opacity: 1; }
+    60%  { transform: scale(1.5); opacity: 0.95; }
+    100% { transform: scale(1.9); opacity: 0; }
+}
+.fx-mate-shockwave {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 90px;
+    height: 90px;
+    margin: -45px 0 0 -45px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 220, 150, 0.9);
+    animation: fx-mate-shockwave 0.8s ease-out forwards;
+}
+@keyframes fx-mate-shockwave {
+    from { transform: scale(0.2); opacity: 1; }
+    to   { transform: scale(2.6); opacity: 0; }
+}
+.fx-mate-debris {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    margin: -4px 0 0 -4px;
+    background: linear-gradient(135deg, #ffd34d, #b45309);
+    border-radius: 2px;
+    animation: fx-mate-debris 0.95s cubic-bezier(0.15, 0.7, 0.4, 1) forwards;
+}
+@keyframes fx-mate-debris {
+    0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx, 60px), var(--dy, -40px)) rotate(320deg); opacity: 0; }
+}
+.fx-mate-smoke {
+    position: absolute;
+    bottom: 8%;
+    width: 46px;
+    height: 46px;
+    margin-left: -23px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(120, 113, 108, 0.75), transparent 70%);
+    animation: fx-mate-smoke 1.6s ease-out forwards;
+}
+@keyframes fx-mate-smoke {
+    0%   { transform: translateY(0) scale(0.5); opacity: 0; }
+    30%  { opacity: 0.8; }
+    100% { transform: translateY(-70px) scale(1.6); opacity: 0; }
+}
+
+/* --- Cannon finale B: fireworks (screen space). --- */
+.fx-mate-fireworks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.fx-mate-burst {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+.fx-mate-burstflash {
+    position: absolute;
+    left: -26px;
+    top: -26px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    animation: fx-mate-burstflash 0.5s ease-out forwards;
+}
+@keyframes fx-mate-burstflash {
+    0%   { transform: scale(0.3); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+.fx-mate-spark {
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: fx-mate-spark 1.1s cubic-bezier(0.15, 0.6, 0.4, 1) forwards;
+}
+@keyframes fx-mate-spark {
+    0%   { transform: translate(0, 0); opacity: 1; }
+    100% { transform: translate(var(--dx, 40px), var(--dy, 40px)); opacity: 0; }
+}
+
+/* --- Chariot finale A: palace gate smash. --- */
+.fx-mate-gate {
+    position: absolute;
+    left: 22%;
+    top: 46%;
+    width: 56%;
+    height: 44%;
+}
+.fx-mate-gatedoor-l,
+.fx-mate-gatedoor-r {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(180deg, #8a5a2b 0%, #5d3a17 60%, #3f270e 100%);
+    border: 2px solid #2b1a08;
+}
+.fx-mate-gatedoor-l {
+    left: 0;
+    transform-origin: 0 50%;
+    animation: fx-mate-gatedoor-l 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.12s forwards;
+}
+.fx-mate-gatedoor-r {
+    right: 0;
+    transform-origin: 100% 50%;
+    animation: fx-mate-gatedoor-r 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.12s forwards;
+}
+@keyframes fx-mate-gatedoor-l {
+    0%   { transform: translateX(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateX(-190%) rotate(-32deg); opacity: 0; }
+}
+@keyframes fx-mate-gatedoor-r {
+    0%   { transform: translateX(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateX(190%) rotate(32deg); opacity: 0; }
+}
+.fx-mate-gateflash {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 110px;
+    height: 110px;
+    margin: -55px 0 0 -55px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 220, 150, 0.4) 60%, transparent 100%);
+    mix-blend-mode: screen;
+    animation: fx-mate-gateflash 0.45s ease-out forwards;
+}
+@keyframes fx-mate-gateflash {
+    0%   { transform: scale(0.3); opacity: 1; }
+    100% { transform: scale(1.8); opacity: 0; }
+}
+.fx-mate-splinter {
+    position: absolute;
+    width: 6px;
+    height: 26px;
+    margin: -13px 0 0 -3px;
+    background: linear-gradient(180deg, #a06a35, #5d3a17);
+    border-radius: 2px;
+    animation: fx-mate-splinter 0.9s cubic-bezier(0.15, 0.7, 0.4, 1) forwards;
+}
+@keyframes fx-mate-splinter {
+    0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx, 40px), var(--dy, -60px)) rotate(var(--rot, 200deg)); opacity: 0; }
+}
+.fx-mate-dust {
+    position: absolute;
+    width: 52px;
+    height: 34px;
+    margin: -17px 0 0 -26px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(168, 150, 125, 0.7), transparent 70%);
+    animation: fx-mate-dust 1.4s ease-out forwards;
+}
+@keyframes fx-mate-dust {
+    0%   { transform: scale(0.4); opacity: 0; }
+    35%  { opacity: 0.85; }
+    100% { transform: scale(1.9) translateY(-14px); opacity: 0; }
+}
+
+/* --- Chariot finale B: cavalry charge sweep with dust. --- */
+.fx-mate-sweep {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.fx-mate-rider {
+    position: absolute;
+    left: -18%;
+    font-size: 58px;
+    line-height: 1;
+    color: #14100b;
+    text-shadow: 0 0 12px rgba(255, 180, 80, 0.55);
+    animation: fx-mate-charge 1.9s cubic-bezier(0.35, 0.1, 0.65, 0.9) forwards;
+}
+@keyframes fx-mate-charge {
+    0%   { transform: translateX(0) translateY(0); opacity: 0; }
+    8%   { opacity: 1; }
+    25%  { transform: translateX(38vw) translateY(-9px); }
+    50%  { transform: translateX(76vw) translateY(0); }
+    75%  { transform: translateX(114vw) translateY(-9px); }
+    92%  { opacity: 1; }
+    100% { transform: translateX(140vw) translateY(0); opacity: 0; }
+}
+
+/* --- Horse finale A: moonlit leap (screen space). --- */
+.fx-mate-night {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 42%, rgba(24, 30, 66, 0.92), rgba(5, 6, 16, 0.96) 75%);
+    animation: fx-mate-night 2.6s ease-out forwards;
+}
+@keyframes fx-mate-night {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+.fx-mate-moon {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 36%, #fffbe8, #f3e9c8 55%, #d9cba0 100%);
+    box-shadow: 0 0 60px 22px rgba(255, 246, 214, 0.35), 0 0 140px 60px rgba(255, 246, 214, 0.12);
+}
+.fx-mate-leaper {
+    position: absolute;
+    left: -22%;
+    top: 46%;
+    font-size: 128px;
+    line-height: 1;
+    color: #050508;
+    animation: fx-mate-leap 2.3s cubic-bezier(0.4, 0.05, 0.6, 0.95) 0.25s forwards;
+}
+@keyframes fx-mate-leap {
+    0%   { transform: translate(0, 4vh) rotate(-8deg); opacity: 0; }
+    10%  { opacity: 1; }
+    45%  { transform: translate(58vw, -16vh) rotate(6deg); }
+    90%  { opacity: 1; }
+    100% { transform: translate(128vw, 3vh) rotate(-6deg); opacity: 0; }
+}
+
+/* --- Horse finale B: lightning strike. --- */
+.fx-mate-stormdark {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 8, 18, 0.55);
+    animation: fx-mate-stormdark 1.1s ease-out forwards;
+}
+@keyframes fx-mate-stormdark {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    70%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+.fx-mate-bolt-svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+.fx-mate-bolt {
+    fill: none;
+    stroke: #e8f4ff;
+    stroke-width: 5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 10px #9adcff) drop-shadow(0 0 26px #5aa9ff);
+    stroke-dasharray: 640;
+    stroke-dashoffset: 640;
+    animation: fx-mate-boltdraw 0.28s linear 0.1s forwards, fx-mate-boltflicker 0.5s linear 0.38s forwards;
+}
+@keyframes fx-mate-boltdraw {
+    to { stroke-dashoffset: 0; }
+}
+@keyframes fx-mate-boltflicker {
+    0%, 100% { opacity: 1; }
+    25%      { opacity: 0.35; }
+    50%      { opacity: 1; }
+    75%      { opacity: 0.55; }
+}
+.fx-mate-strikeimpact {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    margin: -60px 0 0 -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #bfe3ff 35%, rgba(120, 180, 255, 0.35) 65%, transparent 100%);
+    mix-blend-mode: screen;
+    animation: fx-mate-strikeimpact 0.5s ease-out forwards;
+}
+@keyframes fx-mate-strikeimpact {
+    0%   { transform: scale(0.2); opacity: 1; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* --- Soldier finale A: golden spotlight. --- */
+.fx-mate-spotlight {
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    margin: -95px 0 0 -95px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 226, 140, 0.95) 0%, rgba(255, 200, 90, 0.45) 45%, transparent 72%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    animation: fx-mate-spotlight 1.8s ease-in-out infinite;
+}
+@keyframes fx-mate-spotlight {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50%      { transform: scale(1.12); opacity: 1; }
+}
+
+/* --- Soldier finale B: pieces bow.
+   Keyframes carry the base translate(-50%,-50%) so pieces never jump. --- */
+.piece-wrap.fx-mate-bow {
+    animation: fx-mate-bow 1.5s ease-in-out forwards;
+}
+@keyframes fx-mate-bow {
+    0%   { transform: translate(-50%, -50%) rotateX(0deg) translateY(0); }
+    35%  { transform: translate(-50%, -50%) rotateX(24deg) translateY(7px); }
+    70%  { transform: translate(-50%, -50%) rotateX(24deg) translateY(7px); }
+    100% { transform: translate(-50%, -50%) rotateX(0deg) translateY(0); }
+}
+
+/* --- Flying-general finale: samurai-duel slash across the screen. --- */
+.fx-mate-slashwrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.fx-mate-slashline {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 150vmax;
+    height: 7px;
+    margin: -3px 0 0 -75vmax;
+    transform: rotate(-24deg) scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, transparent, #ffffff 30%, #ffe9a8 55%, #ffffff 80%, transparent);
+    filter: drop-shadow(0 0 14px rgba(255, 240, 200, 0.95));
+    animation: fx-mate-slashdraw 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+@keyframes fx-mate-slashdraw {
+    0%   { transform: rotate(-24deg) scaleX(0); opacity: 1; }
+    55%  { transform: rotate(-24deg) scaleX(1); opacity: 1; }
+    100% { transform: rotate(-24deg) scaleX(1) translateX(6vmax); opacity: 0; }
+}
+.fx-mate-slashflash {
+    position: absolute;
+    inset: 0;
+    background: #fffdf4;
+    opacity: 0;
+    animation: fx-mate-slashflash 0.55s ease-out forwards;
+}
+@keyframes fx-mate-slashflash {
+    0%   { opacity: 0; }
+    30%  { opacity: 0.75; }
+    100% { opacity: 0; }
+}
+
+/* --- Closing: falling crown (appended inside the general's piece). --- */
+.fx-mate-crown {
+    position: absolute;
+    left: 50%;
+    top: -6%;
+    font-size: 30px;
+    line-height: 1;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    animation: fx-mate-crownfall 1.3s cubic-bezier(0.5, 0, 0.8, 0.4) forwards;
+}
+@keyframes fx-mate-crownfall {
+    0%   { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 1; }
+    70%  { opacity: 1; }
+    100% { transform: translateX(-50%) translateY(64px) rotate(38deg); opacity: 0; }
+}
+
+/* --- Closing: lowering flag beside the general. --- */
+.fx-mate-flag {
+    position: absolute;
+    width: 30px;
+    height: 64px;
+    margin: -32px 0 0 -15px;
+    pointer-events: none;
+    animation: fx-mate-flaglower 1.6s ease-in-out forwards;
+}
+.fx-mate-flagpole {
+    position: absolute;
+    left: 4px;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #8a6d3b, #5d4a26);
+    border-radius: 2px;
+}
+.fx-mate-flagcloth {
+    position: absolute;
+    left: 7px;
+    top: 2px;
+    width: 22px;
+    height: 15px;
+    background: linear-gradient(135deg, #3f3f46, #18181b);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 22% 50%);
+}
+@keyframes fx-mate-flaglower {
+    0%   { transform: translateY(0); opacity: 0; }
+    18%  { opacity: 1; }
+    70%  { transform: translateY(34px); opacity: 1; }
+    100% { transform: translateY(46px); opacity: 0; }
+}
+
+/* --- Closing: palace crumble. --- */
+.fx-mate-cracks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.fx-mate-cracksvg {
+    width: 100%;
+    height: 100%;
+}
+.fx-mate-crackline {
+    fill: none;
+    stroke: rgba(30, 20, 12, 0.85);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+    animation: fx-mate-crackdraw 0.7s ease-out forwards;
+}
+@keyframes fx-mate-crackdraw {
+    to { stroke-dashoffset: 0; }
+}
+.fx-mate-tile {
+    position: absolute;
+    width: 34px;
+    height: 20px;
+    background: linear-gradient(180deg, #e8c87e, #b98f4a);
+    border: 1px solid #8a6a34;
+    border-radius: 2px;
+    animation: fx-mate-tilefall 1.1s cubic-bezier(0.45, 0, 0.8, 0.5) forwards;
+}
+@keyframes fx-mate-tilefall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    75%  { opacity: 1; }
+    100% { transform: translateY(var(--fall, 90px)) rotate(var(--rot, 40deg)); opacity: 0; }
+}
+
+/* --- Closing: 「絕殺」 calligraphy. --- */
+.fx-mate-juesha {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 8, 6, 0.82);
+    animation: fx-mate-juesha 10s ease-out forwards;
+}
+@keyframes fx-mate-juesha {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+/* Black victory scroll: dark ink paper, moon-white brush, indigo seal. */
+.fx-mate-jzpaper-black {
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(140, 165, 210, 0.14), transparent 60%),
+        linear-gradient(180deg, #252c3b, #141821);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.75), inset 0 0 40px rgba(90, 110, 160, 0.16);
+}
+.fx-mate-jzpaper-black .fx-mate-jzchar {
+    color: #ece7d6;
+    text-shadow: 2px 3px 0 rgba(0, 0, 0, 0.55), 0 0 24px rgba(200, 215, 255, 0.28);
+}
+.fx-mate-jzpaper-black .fx-mate-jzseal {
+    background: linear-gradient(180deg, #2e4d80, #16283f);
+    color: #eef2fb;
+}
+
+/* Fullscreen katana slash (chariot checkmate finale) */
+.fx-mate-katana {
+    position: fixed;
+    inset: 0;
+    z-index: 940;
+    pointer-events: none;
+    overflow: hidden;
+}
+.fx-mate-katana-veil {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    animation: fx-mate-katana-veil 1.15s ease forwards;
+}
+@keyframes fx-mate-katana-veil {
+    0%   { opacity: 0; }
+    12%  { opacity: 0.45; }
+    60%  { opacity: 0.45; }
+    100% { opacity: 0; }
+}
+.fx-mate-katana-glow,
+.fx-mate-katana-core {
+    position: absolute;
+    left: -25%;
+    top: 50%;
+    width: 150%;
+    transform: rotate(-24deg) translateX(-115%);
+    animation: fx-mate-katana-sweep 0.5s cubic-bezier(0.25, 0.7, 0.3, 1) 0.12s forwards;
+}
+.fx-mate-katana-glow {
+    height: 120px;
+    margin-top: -60px;
+    background: linear-gradient(90deg, transparent, rgba(140, 180, 255, 0) 8%, rgba(170, 200, 255, 0.85) 42%, rgba(170, 200, 255, 0.85) 58%, rgba(140, 180, 255, 0) 92%, transparent);
+    filter: blur(14px);
+}
+.fx-mate-katana-core {
+    height: 10px;
+    margin-top: -5px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0) 12%, #ffffff 42%, #ffffff 58%, rgba(255, 255, 255, 0) 88%, transparent);
+    box-shadow: 0 0 34px 10px rgba(200, 220, 255, 0.85);
+    animation-duration: 0.42s;
+}
+@keyframes fx-mate-katana-sweep {
+    from { transform: rotate(-24deg) translateX(-115%); }
+    to   { transform: rotate(-24deg) translateX(115%); }
+}
+.fx-mate-katana-flash {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    animation: fx-mate-katana-flash 0.55s ease 0.42s forwards;
+}
+@keyframes fx-mate-katana-flash {
+    0%   { opacity: 0; }
+    22%  { opacity: 0.85; }
+    100% { opacity: 0; }
+}
+.fx-mate-katana-after {
+    position: absolute;
+    left: -25%;
+    top: 50%;
+    width: 150%;
+    height: 3px;
+    margin-top: -1px;
+    transform: rotate(-24deg);
+    background: linear-gradient(90deg, transparent, #ffffff 22%, #ffffff 78%, transparent);
+    box-shadow: 0 0 18px 4px rgba(180, 210, 255, 0.9);
+    opacity: 0;
+    animation: fx-mate-katana-after 1.0s ease 0.5s forwards;
+}
+@keyframes fx-mate-katana-after {
+    0%   { opacity: 0; }
+    18%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.fx-mate-jzpaper {
+    position: relative;
+    padding: 34px 46px;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(120, 90, 40, 0.14), transparent 60%),
+        linear-gradient(180deg, #f7f1de, #efe4c8);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(120, 90, 40, 0.18);
+    border-radius: 4px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+.fx-mate-jzchar {
+    font-family: "STKaiti", "KaiTi", "Kaiti SC", "TW-Kai", serif;
+    font-size: clamp(84px, 17vw, 150px);
+    line-height: 1;
+    color: #141414;
+    text-shadow: 2px 3px 0 rgba(20, 20, 20, 0.16);
+    clip-path: inset(0 100% 0 0);
+    animation: fx-mate-brushreveal 1s cubic-bezier(0.5, 0, 0.3, 1) 0.35s forwards;
+}
+.fx-mate-jzchar-2 {
+    animation-delay: 1.25s;
+}
+/* Brush-wipe reveal: the character is painted left-to-right like a brush
+   stroke, then settles. */
+@keyframes fx-mate-brushreveal {
+    0%   { clip-path: inset(0 100% 0 0); }
+    100% { clip-path: inset(0 0 0 0); }
+}
+.fx-mate-jzseal {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #c0392b, #96281b);
+    color: #fdf6e3;
+    font-family: "STKaiti", "KaiTi", serif;
+    font-size: 30px;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(150, 40, 27, 0.55);
+    opacity: 0;
+    transform: scale(3);
+    animation: fx-mate-stampslam 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) 2.25s forwards;
+}
+@keyframes fx-mate-stampslam {
+    to { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+
+/* --- Closing: celebration — confetti + lanterns. --- */
+.fx-mate-celebrate {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.fx-mate-confetti {
+    position: absolute;
+    top: -4vh;
+    width: 10px;
+    height: 14px;
+    animation: fx-mate-confetti 3.2s linear forwards;
+}
+@keyframes fx-mate-confetti {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+    25%  { transform: translateY(28vh) translateX(2.5vw) rotate(200deg); }
+    50%  { transform: translateY(56vh) translateX(-2.5vw) rotate(400deg); }
+    75%  { transform: translateY(84vh) translateX(2vw) rotate(600deg); }
+    100% { transform: translateY(112vh) translateX(0) rotate(760deg); opacity: 0.9; }
+}
+.fx-mate-lantern {
+    position: absolute;
+    bottom: -12vh;
+    font-size: 40px;
+    line-height: 1;
+    filter: drop-shadow(0 0 14px rgba(255, 170, 60, 0.8));
+    animation: fx-mate-lantern 6s ease-in forwards;
+}
+@keyframes fx-mate-lantern {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    12%  { opacity: 1; }
+    50%  { transform: translateY(-60vh) translateX(3vw); }
+    100% { transform: translateY(-125vh) translateX(-2vw); opacity: 0; }
+}
+
+/* prefers-reduced-motion: still every checkmate animation. Overlays render
+   as static frames; the camera push-in and slash/flash bursts are off. */
+@media (prefers-reduced-motion: reduce) {
+    .fx-mate-flash,
+    .fx-mate-fireball,
+    .fx-mate-shockwave,
+    .fx-mate-debris,
+    .fx-mate-smoke,
+    .fx-mate-burstflash,
+    .fx-mate-spark,
+    .fx-mate-gatedoor-l,
+    .fx-mate-gatedoor-r,
+    .fx-mate-gateflash,
+    .fx-mate-splinter,
+    .fx-mate-dust,
+    .fx-mate-rider,
+    .fx-mate-night,
+    .fx-mate-leaper,
+    .fx-mate-bolt,
+    .fx-mate-stormdark,
+    .fx-mate-strikeimpact,
+    .fx-mate-spotlight,
+    .fx-mate-slashline,
+    .fx-mate-slashflash,
+    .fx-mate-crown,
+    .fx-mate-flag,
+    .fx-mate-crackline,
+    .fx-mate-tile,
+    .fx-mate-jzchar,
+    .fx-mate-jzseal,
+    .fx-mate-confetti,
+    .fx-mate-lantern,
+    .fx-mate-juesha {
+        animation: none;
+    }
+    .fx-mate-flash { opacity: 0; }
+    .fx-mate-fireball { opacity: 0.55; transform: scale(1); }
+    .fx-mate-shockwave { opacity: 0.4; transform: scale(1.4); }
+    .fx-mate-spotlight { opacity: 0.9; }
+    .fx-mate-night { opacity: 1; }
+    .fx-mate-leaper { opacity: 1; transform: translate(58vw, -8vh); }
+    .fx-mate-moon { opacity: 1; }
+    .fx-mate-bolt { stroke-dashoffset: 0; opacity: 0.9; }
+    .fx-mate-crackline { stroke-dashoffset: 0; }
+    .fx-mate-jzchar { clip-path: inset(0 0 0 0); }
+    .fx-mate-jzseal { opacity: 1; transform: scale(1) rotate(-8deg); }
+    .fx-mate-juesha { opacity: 1; }
+    .fx-mate-confetti { opacity: 0.85; top: 40vh; }
+    .fx-mate-lantern { opacity: 0.95; bottom: 30vh; }
+    .fx-mate-crown { opacity: 0.9; }
+    .fx-mate-flag { opacity: 0.9; }
+    .fx-mate-splinter, .fx-mate-debris, .fx-mate-spark { opacity: 0; }
+    .fx-mate-katana { display: none; }
+    .fx-mate-tile { opacity: 0.9; }
+    .fx-mate-dimveil { opacity: 1; }
+    .board-layer.fx-mate-pushin {
+        transform: none;
+    }
+    .piece-wrap.fx-mate-bow {
+        animation: none;
+    }
+}
+
+/* ============ Phase 5 (W3): idle ambience ============
+ * Driven by the `fx-idle-on` body class, toggled by EffectsManager:
+ * ON at Full/Low, OFF at Off, forced off under prefers-reduced-motion.
+ * Additive keyframes only — no existing rules modified.
+ */
+body.fx-idle-on #boardLayer .piece-wrap {
+    animation: fx-idle-breathe 4.2s ease-in-out infinite;
+    transform-origin: center;
+}
+/* Keyframes carry the base translate(-50%,-50%) so pieces never jump: a CSS
+ * animation's transform REPLACES the element's transform while it runs.
+ * (The first version of these keyframes omitted the translate and displaced
+ * every piece by half its size whenever idle ambience was on.) */
+@keyframes fx-idle-breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50%      { transform: translate(-50%, -50%) scale(1.025); }
+}
+/* Flipped-board variant keeps the 180deg orientation while breathing */
+body.fx-idle-on .board-outer.flipped #boardLayer .piece-wrap {
+    animation-name: fx-idle-breathe-flipped;
+}
+@keyframes fx-idle-breathe-flipped {
+    0%, 100% { transform: translate(-50%, -50%) rotate(180deg) scale(1); }
+    50%      { transform: translate(-50%, -50%) rotate(180deg) scale(1.025); }
+}
+/* 0.9s delay lets the banner's own entrance transition finish first. */
+body.fx-idle-on #checkBanner.show .check-banner-inner {
+    animation: fx-idle-flutter 2.6s ease-in-out 0.9s infinite;
+}
+@keyframes fx-idle-flutter {
+    0%, 100% { transform: translateY(0) rotate(-0.4deg); }
+    50%      { transform: translateY(-3px) rotate(0.4deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    body.fx-idle-on #boardLayer .piece-wrap,
+    body.fx-idle-on .board-outer.flipped #boardLayer .piece-wrap,
+    body.fx-idle-on #checkBanner.show .check-banner-inner {
+        animation: none;
+    }
+}
+
+
+
+

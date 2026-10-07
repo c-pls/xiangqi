@@ -1,0 +1,17 @@
+{
+  "name": "xiangqi",
+  "version": "1.0.0",
+  "description": "Xiangqi (Chinese Chess) - Modern Online Multiplayer & Server",
+  "private": true,
+  "main": "server/src/index.js",
+  "scripts": {
+    "start": "node server/src/index.js",
+    "server": "npm --prefix server start",
+    "test": "npm --prefix server test",
+    "test:rules": "npm --prefix server run test:rules"
+  },
+  "dependencies": {
+    "ws": "^8.18.0",
+    "zod": "^3.24.1"
+  }
+}
