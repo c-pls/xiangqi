@@ -3,18 +3,19 @@
  * tests/check-announcer.test.js — QA (W4-final) announcer non-interference
  * tests for Phase 3 check cinematics.
  *
- * Contract under test: 'check' events must never trigger the Phase 2
- * announcer. EffectsManager._onCheck makes no Announcer calls; the announcer
- * stays capture-scoped (announceForCapture on 'capture' only).
+ * Contract under test: announcer popups were removed per user request
+ * (2026-10-06) — neither 'check' nor 'capture' events may trigger the
+ * Phase 2 announcer. EffectsManager makes no Announcer.announceForCapture
+ * calls at all; js/announcer.js remains only for per-game capture-history
+ * tracking.
  *
  * Loads the REAL js/event-bus.js + js/announcer.js + js/effects-config.js +
  * js/effects-bridge.js with stubbed CheckVFX / audioManager / app. The real
- * Announcer.announceForCapture is wrapped in a spy so the test proves both
- * directions:
+ * Announcer.announceForCapture is wrapped in a spy so the test proves:
  *   1. a 'check' event (any intensity, single or double) never calls it and
  *      creates no announcement popups, and
- *   2. (control) a 'capture' event still calls it exactly once — the spy is
- *      live and the announcer path is intact.
+ *   2. a 'capture' event never calls it either (popups removed) — while the
+ *      capture itself still commits exactly once.
  *
  * node:assert only, zero deps. Run from the sandbox root:
  *   node tests/check-announcer.test.js
@@ -96,7 +97,7 @@ function checkEvent(pieceKey, nCheckers) {
     console.log(`ok - intensity '${intensity}': 3 check events, zero announcer calls, zero popups`);
   }
 
-  // --- 2. control: 'capture' still announces (spy is live) --------------------
+  // --- 2. 'capture' never announces either (popups removed 2026-10-06) ------
   {
     const s = setup();
     s.manager.setIntensity('full');
@@ -111,11 +112,11 @@ function checkEvent(pieceKey, nCheckers) {
     });
     await sleep(200);
     assert.strictEqual(
-      s.announceCalls.length, 1,
-      'control: capture must still call Announcer.announceForCapture exactly once'
+      s.announceCalls.length, 0,
+      'capture must not call Announcer.announceForCapture (popups removed)'
     );
-    assert.strictEqual(s.announceCalls[0].piece, 'C', 'control: announcement carries the attacker');
-    console.log('ok - control: capture still announces (announcer path intact, spy live)');
+    assert.strictEqual(commits, 1, 'capture still commits exactly once');
+    console.log('ok - capture: zero announcer calls (popups removed), commit exactly once');
   }
 
   console.log('\ncheck-announcer non-interference tests: ALL PASSED');

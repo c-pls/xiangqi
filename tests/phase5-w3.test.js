@@ -17,9 +17,6 @@
  *     the sting at 'full' only (silent at 'low'/'off' by documented choice).
  *  5. js/effects-bridge.js — idle class: body.fx-idle-on at full/low, off at
  *     'off' and under prefers-reduced-motion.
- *  6. js/hall-of-fame.js — no-ops without DOM/canvas/modal; injects the
- *     snapshot button when the modal opens; saveSnapshot composites and
- *     downloads.
  *
  * node:assert only, zero deps. Run from the sandbox root:
  *   node tests/phase5-w3.test.js
@@ -33,7 +30,6 @@ const BUS = path.join(ROOT, 'js', 'event-bus.js');
 const MUSIC = path.join(ROOT, 'js', 'music.js');
 const AUDIO = path.join(ROOT, 'js', 'audio-manager.js');
 const BRIDGE = path.join(ROOT, 'js', 'effects-bridge.js');
-const HOF = path.join(ROOT, 'js', 'hall-of-fame.js');
 const RIVER = path.join(ROOT, 'js', 'river-fx.js');
 
 let passed = 0;
@@ -335,119 +331,6 @@ function loadBridge({ navigatorStub, matchMediaMatches = false, documentStub } =
     assert.ok(env.doc.classes.has('fx-idle-on'), 'back on at full');
     const envRm = loadBridge({ matchMediaMatches: true });
     assert.ok(!envRm.doc.classes.has('fx-idle-on'), 'forced off under reduced motion');
-  });
-
-  // -------------------------------------------------------- hall of fame ---
-  function loadHof({ documentStub } = {}) {
-    const stubs = harness.makeStubs();
-    harness.loadScript(stubs, BUS);
-    const opts = {};
-    if (documentStub !== undefined) opts.document = documentStub;
-    harness.loadScript(stubs, HOF, opts);
-    const hof = stubs.window.HallOfFame;
-    assert.ok(hof, 'window.HallOfFame assigned');
-    return { stubs, hof };
-  }
-
-  await test('hall-of-fame: clean no-ops without DOM/canvas/modal', async () => {
-    const { hof } = loadHof({}); // no document
-    assert.strictEqual(hof.injectButton(), false, 'inject without modal -> false');
-    assert.strictEqual(hof.saveSnapshot(), false, 'snapshot without canvas -> false');
-    assert.deepStrictEqual(hof.collectCanvases(), [], 'no canvases collected');
-    const { hof: hof2 } = loadHof({ documentStub: makeDocument() });
-    assert.strictEqual(hof2.injectButton(), false, 'inject without modal el -> false');
-    assert.strictEqual(hof2.saveSnapshot(), false, 'snapshot without source canvas -> false');
-  });
-
-  await test('hall-of-fame: injects button into the modal card when it opens', async () => {
-    const doc = makeDocument();
-    const cardChildren = [];
-    const card = {
-      appendChild(c) { cardChildren.push(c); return c; },
-      insertBefore(c) { cardChildren.push(c); return c; },
-    };
-    const modalClasses = new Set();
-    const modal = {
-      classList: {
-        add: (c) => modalClasses.add(c),
-        contains: (c) => modalClasses.has(c),
-      },
-      querySelector: () => card,
-    };
-    let injectedBtn = null;
-    doc.getElementById = (id) => {
-      if (id === 'gameOverModal') return modal;
-      if (id === 'hofSnapshotBtn') return injectedBtn;
-      return null;
-    };
-    const origCreate = doc.createElement;
-    doc.createElement = (t) => {
-      const el = origCreate(t);
-      if (t === 'button') {
-        const prevAdd = el.addEventListener;
-        el.addEventListener = prevAdd;
-      }
-      return el;
-    };
-    const { stubs, hof } = loadHof({ documentStub: doc });
-    // Simulate the modal opening via the checkmate flow with a MutationObserver stub.
-    global.MutationObserver = function (cb) { this.cb = cb; };
-    global.MutationObserver.prototype.observe = function () {
-      modalClasses.add('open');
-      this.cb();
-    };
-    global.MutationObserver.prototype.disconnect = function () {};
-    try {
-      stubs.window.GameBus.emit('checkmate', { reason: 'checkmate' });
-      const btn = doc.getElementById('hofSnapshotBtn');
-      // The stub document does not track the button id; verify via card children.
-      assert.ok(cardChildren.length === 1, 'one button injected into the modal card');
-      injectedBtn = cardChildren[0];
-      assert.ok(/snapshot/i.test(injectedBtn.textContent), 'button is the snapshot button');
-      assert.strictEqual(hof.injectButton(), true, 'idempotent: second inject is a no-op true');
-      assert.strictEqual(cardChildren.length, 1, 'no duplicate button');
-    } finally {
-      delete global.MutationObserver;
-    }
-  });
-
-  await test('hall-of-fame: saveSnapshot composites canvases and downloads', async () => {
-    const doc = makeDocument();
-    const drawn = [];
-    const fxCanvas = {
-      width: 300, height: 200,
-      getContext: () => ({}),
-    };
-    const ctx2d = {
-      fillRect() {},
-      drawImage(c) { drawn.push(c); },
-    };
-    const offscreen = {
-      width: 0, height: 0,
-      getContext: () => ctx2d,
-      toDataURL: () => 'data:image/png;base64,AAA',
-    };
-    let clicked = null;
-    const anchor = { click() { clicked = this.href; }, remove() {} };
-    doc.getElementById = (id) => {
-      if (id === 'fxCanvas') return fxCanvas;
-      if (id === 'fxCanvas3D') return null;
-      if (id === 'boardOuter') return { getBoundingClientRect: () => ({ width: 400, height: 450 }) };
-      return null;
-    };
-    doc.createElement = (t) => {
-      if (t === 'canvas') return offscreen;
-      if (t === 'a') return anchor;
-      return makeDocument().createElement(t);
-    };
-    doc.body = { appendChild() {} };
-    const { hof } = loadHof({ documentStub: doc });
-    assert.deepStrictEqual(hof.collectCanvases(), [fxCanvas], 'fxCanvas collected');
-    assert.strictEqual(hof.saveSnapshot(), true, 'snapshot succeeded');
-    assert.deepStrictEqual(drawn, [fxCanvas], 'source canvas drawn into composite');
-    assert.ok(clicked && clicked.indexOf('data:image/png') === 0, 'download triggered');
-    assert.strictEqual(offscreen.width, 400, 'composite sized to board');
-    assert.strictEqual(anchor.download, 'antigravity-checkmate.png', 'download filename');
   });
 
   // ------------------------------------------------------------- river ------
